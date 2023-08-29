@@ -1,3 +1,12 @@
+body {
+    animation: scroll 0.1ms 4s forwards;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
 #name_wrapper {
     margin-top: 5vh;
     display: flex;
@@ -76,5 +85,15 @@
     }
     to {
         width: 60vw;
+    }
+}
+
+@keyframes scroll {
+    from {
+        overflow-y: hidden;
+        
+    }
+    to {
+        overflow-y: scroll;
     }
 }
