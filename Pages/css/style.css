@@ -76,22 +76,25 @@ body {
 
 /*main--------------------------------------------------------------------*/
 #main {
-    left: 0;
+    margin-top: 45vh;
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .mainLine {
     display: flex;
-    background-color: antiquewhite;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
+    width: 70%;
 }
 
-
+.hyper {
+    width: 75%;
+}
 
 /*keyframes*/
 @keyframes name {
