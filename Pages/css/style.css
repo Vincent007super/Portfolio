@@ -69,6 +69,30 @@ body {
     animation: line 1.5s 2.5s forwards ;
 }
 
+#menu {
+    animation: menuAppear 1s 4s forwards ease-out;
+    opacity: 0;
+}
+
+/*main--------------------------------------------------------------------*/
+#main {
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.mainLine {
+    display: flex;
+    background-color: antiquewhite;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+
+
 /*keyframes*/
 @keyframes name {
     0% {
@@ -95,5 +119,14 @@ body {
     }
     to {
         overflow-y: scroll;
+    }
+}
+
+@keyframes menuAppear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
