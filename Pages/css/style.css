@@ -76,13 +76,14 @@ body {
 
 /*main--------------------------------------------------------------------*/
 #main {
-    margin-top: 45vh;
+    margin-top: 55vh;
     width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    font-size: 1.2vw;
 }
 
 .mainLine {
@@ -93,7 +94,11 @@ body {
 }
 
 .hyper {
-    width: 75%;
+    width: 65%;
+}
+
+img {
+    width: 30%;
 }
 
 /*keyframes*/
