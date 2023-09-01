@@ -1,6 +1,6 @@
 #main {
     width: 100vw;
-    height: 50vh;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -37,27 +37,133 @@ justify-content: space-between;
   }
 
 .goodBar {
-    background-color: green;
-    width: 80%;
+    background-color: rgb(6, 181, 6);
+    width: 0%;
+    animation: scrollG 1.5s 0.5s forwards ease-out;
 }
 
 .mediumBar {
     background-color: yellow;
-    width: 60%;
+    width: 0%;
+    animation: scrollM 1.7s 0.5s forwards ease-out;
 }
 
 .badBar {
     background-color: red;
-    width: 40%;
+    width: 0%;
+    animation: scrollB 1.9s 0.5s forwards ease-out;
 }
 
-  animations
-  @keyframes {
-    from {
+#wrapper2 {
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+}
 
+#wrapper3 {
+  border-left: rgb(255, 255, 255) 1px solid;
+  border-bottom: rgb(255, 255, 255) 1px solid;
+  width: 65vw;
+  height: 35vw;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+#wrapper4 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: fit-content;
+  justify-content: space-between;
+  margin: 0.5vw;
+  align-items: center;
+}
+
+.graphs {
+  border: 1px rgb(74, 74, 74) dashed;
+  width: 20%;
+  margin: 0.5vw;
+  margin-bottom: 0;
+}
+
+#graph1 {
+  background-color: rgb(6, 181, 6);
+  height: 0%;
+  animation: graphG 1.5s 1s forwards;
+}
+
+#graph2 {
+  background-color: yellow;
+  height: 0%;
+    animation: graphM 2s 1.5s forwards;
+}
+
+#graph3 {
+  background-color: yellow;
+  height: 0%;
+    animation: graphM2 2.5s 2s forwards;
+}
+
+.ledger {
+  display: flex;
+  width: 20%;
+  justify-content: center;
+  align-items: center;
+}
+
+  /*animations*/
+  @keyframes scrollG {
+    from {
+      width: 0%;
     }
     to {
-
+      width: 80%;
     }
   }
-  
+
+   @keyframes scrollM {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 60%;
+    }
+  }
+
+   @keyframes scrollB {
+    from {
+      width: 0%;
+    }
+    to {
+      width: 40%;
+    }
+  }
+
+  @keyframes graphG {
+    from {
+      height: 0;
+    }
+    to {
+      height: 80%;
+    }
+  }
+
+  @keyframes graphM {
+    from {
+      height: 0;
+    }
+    to {
+      height: 54%;
+    }
+  }
+
+    @keyframes graphM2 {
+    from {
+      height: 0;
+    }
+    to {
+      height: 65%;
+    }
+  }

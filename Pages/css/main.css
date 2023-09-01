@@ -8,6 +8,10 @@ body {
     overflow-x: hidden;
 }
 
+::-webkit-scrollbar {
+    display: none;
+}
+
 #selected {
     background-color: white;    
     color: black;

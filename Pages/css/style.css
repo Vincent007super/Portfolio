@@ -3,10 +3,6 @@ body {
     overflow: hidden;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
-
 #name_wrapper {
     margin-top: 5vh;
     display: flex;
