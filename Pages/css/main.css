@@ -37,7 +37,7 @@ body {
 
 .menuButton:hover {
     animation: menuSelecter 0.5s 0s forwards;
-    border: white solid 2px;
+    border: 0;
 }
 
 .menuLinks {
@@ -52,11 +52,12 @@ a {
 
 /*animations*/
 
+
 @keyframes menuSelecter {
-    from {
-        border: 0px;
+    0% {
+        border: 0 white solid;
     }
-    to {
-        border: 2px white solid;
+    100% {
+        border: 5px white solid;
     }
 }
