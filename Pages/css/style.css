@@ -4,6 +4,7 @@ body {
 }
 
 #name_wrapper {
+    font-family: impact;
     margin-top: 5vh;
     display: flex;
     flex-direction: column;
