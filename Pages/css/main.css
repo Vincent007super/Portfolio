@@ -31,15 +31,15 @@ body {
 
 .menuButton {
     min-width: max-content;
-    position: relative;
+
     padding: 5px;
-    border: 0px solid white; /* Start with a white border of 0px width */
+    border: 0px solid white;
     transition: border-width 1.5s ease-out, border-color 1.5s ease-out; /* Apply transition to border-width and border-color */
 }
 
 .menuButton:hover {
-    border-width: 5px; /* Increase border width on hover */
-    border-color: white; /* Set the border color to white on hover */
+    border-width: 5px; 
+    border-color: white; 
 }
 
 .menuLinks {
