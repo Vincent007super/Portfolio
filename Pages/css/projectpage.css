@@ -19,12 +19,16 @@
     width: inherit;
 }
 
+#hyper1 {
+    background-image: url(/media/ah.jpeg);
+    background-size: cover;
+}
+
 img {
     height: inherit;
     width: inherit;
     position: absolute;
     z-index: -5;
-    object-fit: cover;
     border-radius: inherit;
 }
 
