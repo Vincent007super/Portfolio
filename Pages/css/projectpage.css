@@ -1,3 +1,7 @@
+a {
+    height: inherit;
+}
+
 #wrapper1 {
     display: flex;
     justify-content: center;
@@ -24,7 +28,7 @@
 }
 
 #hyper1 {
-    background-image: url(/media/ah.jpeg);
+    background-image: url(/media/expo.png);
 
 }
 
@@ -38,10 +42,23 @@ img {
 
 .text {
    opacity: 0;
-   transition: opacity 0.5s ease-out;
+   transition: opacity 1s ease-out;
    margin: 0.5rem;
+   z-index: 2;
 }
 
 .hyper:hover .text {
     opacity: 1;
+}
+
+.screen {
+    background-color: rgba(0, 0, 0, 0.589);
+    position: absolute;
+    width: 40vw;
+    transition: height 0.5s ease-out;
+    height: 0vh;
+}
+
+.hyper:hover .screen {
+    height: 20vh;
 }
