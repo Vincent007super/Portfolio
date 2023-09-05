@@ -17,11 +17,15 @@
     border-radius: 3mm;
     height: inherit;
     width: inherit;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 #hyper1 {
     background-image: url(/media/ah.jpeg);
-    background-size: cover;
+
 }
 
 img {
@@ -32,6 +36,12 @@ img {
     border-radius: inherit;
 }
 
-h1, p {
-    position: absolute;
+.text {
+   opacity: 0;
+   transition: opacity 0.5s ease-out;
+   margin: 0.5rem;
+}
+
+.hyper:hover .text {
+    opacity: 1;
 }

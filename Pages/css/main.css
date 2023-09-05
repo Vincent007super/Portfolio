@@ -31,7 +31,6 @@ body {
 
 .menuButton {
     min-width: max-content;
-
     padding: 5px;
     border: 0px solid white;
     transition: border-width 1.5s ease-out, border-color 1.5s ease-out; 
