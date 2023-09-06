@@ -1,0 +1,26 @@
+#wrapper1 {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+
+form {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    font-size: 10vw;
+    margin-bottom: 3vh;
+}
+
+input {
+    height: 5vh;
+    font-size: 5vh;
+}
+
+#file {
+    margin-bottom: 2vh;
+}
+
+#form1 {
+    height: 6vh;
+}

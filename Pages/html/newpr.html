@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project's</title>
+    <title>Contact page</title>
     <link rel="icon" type="image/x-icon" href="/media/Screenshot 2023-08-29 at 13.50.53.png">
     <!--css-->
-    <link rel="stylesheet" href="../css/projectpage.css">
+    <link rel="stylesheet" href="../css/newpr.css">
     <link rel="stylesheet" href="../css/main.css">
 </head>
 
@@ -31,29 +31,19 @@
         </div>
     </div>
 
-    <div id="wrapper1">
-        <div id="wrapper2">
-            <a href="https://89615.stu.sd-lab.nl/leerJaar1/beroeps/index.html">
-                <div class="hyper" id="hyper1">
-                    <h1 class="text">
-                        EXPO 2025 - Osaka
-                    </h1>
-                    <p class="text">
-                        A project I had to make for school, I jumped in quite unpreppared and the final product was not
-                        only unfinished but also not scale-able.
-                    </p>
-                    <div class="screen"></div>
-                </div>
-            </a>
-        </div>
-    </div>
-    <div id="wrapper3">
-        <div id="wrapper4">
-            <a id="newprj" href="/Pages/html/newpr.html">
-                New project
-            </a>
-        </div>
-    </div>
+    <id id="wrapper1">
+        <form action="/Pages/html/projectpage.html">
+            <label for="title">Title:</label>
+            <input type="text" placeholder="Title here" id="title" required>
+            <label for="description">Description:</label>
+            <input type="text" placeholder="Description here" id="description">
+            <label for="url">Link to Website:</label>
+            <input type="url" placeholder="url here" id="url" required>
+            <label for="file">Image here:</label>
+            <input type="file" placeholder="image" id="file" required>
+            <input type="submit" value="Add Project!" id="form1">
+        </form>
+    </id>
     <script src="/Pages/scripting/script.js"></script>
 </body>
 

@@ -17,6 +17,28 @@ a {
     height: 43vh;
 }
 
+#wrapper3 {
+    display: flex;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    margin-top: 2vh;
+    height: fit-content;
+    justify-content: flex-end;
+}
+
+#wrapper4 {
+    display: flex;
+    width: 15%;
+    font-size: 1.5vw;
+    height: fit-content;
+    justify-content: center;
+}
+
+#newprj {
+    padding: 6.5px;
+}
+
 .hyper {
     border-radius: 3mm;
     height: inherit;
@@ -62,3 +84,4 @@ img {
 .hyper:hover .screen {
     height: 20vh;
 }
+
