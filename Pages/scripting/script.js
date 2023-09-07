@@ -1,3 +1,10 @@
+let count = 0
+
+function add() {
+    count ++;
+    console.log(count)
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Get references to form elements
     const form = document.getElementById('projectForm');
@@ -15,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
             title: titleInput.value,
             description: descriptionInput.value,
             url: urlInput.value,
+            file: fileInput.value
             // You can add more properties as needed
         };
  
@@ -47,15 +55,18 @@ const savedProjects = JSON.parse(localStorage.getItem('projects')) || [];
 const wrapper2 = document.getElementById('wrapper2');
 
 savedProjects.forEach((project, index) => {
+    const anchor = document.createElement('a');
+    anchor.href = project.url;
     const hyperDiv = document.createElement('div');
     hyperDiv.classList.add('hyper');
-
+    var test = document.createElement("hyper"+count)
     // Create elements for title and description
     const titleElement = document.createElement('h1');
     titleElement.textContent = project.title;
     const descriptionElement = document.createElement('p');
     descriptionElement.textContent = project.description;
 
+    anchor.appendChild(hyperDiv);
     hyperDiv.appendChild(titleElement);
     hyperDiv.appendChild(descriptionElement);
 

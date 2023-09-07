@@ -6,7 +6,7 @@ a {
     display: flex;
     justify-content: center;
     width: 100vw;
-    top: 5vh;
+    top: 25vh;
 }
 
 #wrapper2 {
@@ -54,6 +54,15 @@ a {
 
 }
 
+#hyper2 {
+    background-image: url(/media/YT.png);
+}
+
+#hyper3 {
+    background-image: url(/media/logo.jpg);
+    background-position: center;
+}
+
 img {
     height: inherit;
     width: inherit;
@@ -78,10 +87,13 @@ img {
     position: absolute;
     width: 40vw;
     transition: height 0.5s ease-out;
-    height: 0vh;
+    height: 0vh;    
 }
 
 .hyper:hover .screen {
     height: 20vh;
 }
 
+.seper {
+    margin: 2vh 0 2vh 0;
+}

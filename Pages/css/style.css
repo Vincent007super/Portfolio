@@ -99,6 +99,7 @@ body {
     flex-direction: row;
     justify-content: space-between;
     width: 70%;
+    margin: 2vh;
 }
 
 .hyper {
