@@ -61,7 +61,7 @@ body {
 #line {
     background-color: white;
     border-radius: 1.5mm;
-    height: 15px;
+    height: 5px;
     width: 0vw;
     animation: line 1.5s 2.5s forwards ;
 }
@@ -79,7 +79,7 @@ body {
     align-items: end;
     width: 100vw;
     font-size: 0vw;
-    animation: arrowAppear 3s 5s alternate ease-out forwards, arrowDis 1.5s 15s forwards;
+    animation: arrowAppear 3s 5s alternate ease-out forwards;
 }
 
 /*main--------------------------------------------------------------------*/
@@ -162,16 +162,5 @@ img {
     100% {
         opacity: 1;
         font-size: 8.5vw;
-    }
-}
-
-@keyframes arrowDis {
-    from {
-        opacity: 1;
-        font-size: 8.5vw;
-    }
-    to {
-        opacity: 0;
-        font-size: 0vw;
     }
 }

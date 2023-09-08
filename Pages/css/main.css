@@ -1,5 +1,5 @@
 body {
-    background-color: black;
+    background-color: rgb(2, 29, 1);
     color: white;
     margin: 0;
     user-select: none;
@@ -17,11 +17,23 @@ body {
 }
 
 #menu {
-    margin: 2vh;
+    margin-top: 6vh;
     display: flex;
     width: 100vw;
     flex-direction: row;
     justify-content: center;
+}
+
+.name1 {
+    position: absolute;
+    top: 0;
+    left: 16vw;
+    font-family: impact;
+    margin-top: 5vh;
+    font-size: 3.8vw;
+    rotate: 351deg;
+    color: black;
+    text-shadow: 2px 2px white, -2px -2px white;
 }
 
 #menuSelect {

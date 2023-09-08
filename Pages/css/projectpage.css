@@ -6,7 +6,7 @@ a {
     display: flex;
     justify-content: center;
     width: 100vw;
-    top: 25vh;
+    margin-top: 15vh;
 }
 
 #wrapper2 {
@@ -19,15 +19,14 @@ a {
 
 #newprj {
     position: fixed;
-    top: 0;
-    left: 2vw;
-    font-size: 1.5vw;
-    padding: 6.5px;
+    margin-top: 30vh;
+    left: 1.2vw;
+    font-size: 1.6vw;
+    padding: 16px;
     color: black;
     animation: top 3s 2s forwards ease-in-out;
     height: 30px;
-    align-items:end;
-    border-radius: 0 0 2mm 2mm;
+    border-radius: 2mm;
 }
 
 .hyper {
