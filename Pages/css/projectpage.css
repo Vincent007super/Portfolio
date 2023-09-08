@@ -17,26 +17,17 @@ a {
     height: 43vh;
 }
 
-#wrapper3 {
-    display: flex;
-    width: 100vw;
+#newprj {
     position: fixed;
     top: 0;
-    margin-top: 2vh;
-    height: fit-content;
-    justify-content: flex-end;
-}
-
-#wrapper4 {
-    display: flex;
-    width: 15%;
+    left: 2vw;
     font-size: 1.5vw;
-    height: fit-content;
-    justify-content: center;
-}
-
-#newprj {
     padding: 6.5px;
+    color: black;
+    animation: top 3s 2s forwards ease-in-out;
+    height: 30px;
+    align-items:end;
+    border-radius: 0 0 2mm 2mm;
 }
 
 .hyper {
@@ -51,11 +42,12 @@ a {
 
 #hyper1 {
     background-image: url(/media/expo.png);
-
+    background-position: right;
 }
 
 #hyper2 {
     background-image: url(/media/YT.png);
+    background-position: center;
 }
 
 #hyper3 {
@@ -96,4 +88,20 @@ img {
 
 .seper {
     margin: 2vh 0 2vh 0;
+}
+
+/*animations*/
+
+@keyframes top {
+    0% {
+        top: -40px;
+        background-color: transparent;
+    }
+    30% {
+        background-color: rgba(255, 255, 255, 0.43);
+    }
+    100% {
+        top: 0px;
+        background-color: white;
+    }
 }
