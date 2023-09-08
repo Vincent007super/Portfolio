@@ -41,17 +41,17 @@ a {
 }
 
 #hyper1 {
-    background-image: url(/media/expo.png);
+    background-image: url(../../media/expo.png);
     background-position: right;
 }
 
 #hyper2 {
-    background-image: url(/media/YT.png);
+    background-image: url(../../media/YT.png);
     background-position: center;
 }
 
 #hyper3 {
-    background-image: url(/media/logo.jpg);
+    background-image: url(../../media/logo.jpg);
     background-position: center;
 }
 
