@@ -2,6 +2,12 @@ body {
     background-color: black;
     color: rgb(238, 232, 232);
     margin: 0;
+    overflow-x: hidden;
+    font-family: Verdana;
+}
+
+p {
+    margin: 0;
 }
 
 header {
@@ -11,11 +17,12 @@ header {
 }
 
 menu {
-    height: 80vh;
+    padding: 1.5rem;
+    width: 30%;
 }
 
 main {
-    height: 80vh;
+
 }
 
 footer {
@@ -29,10 +36,49 @@ img {
     height: inherit;
 }
 
-/*wrappers*/
+a {
+    color: inherit;
+    text-decoration: none;
+    padding: 10px;
+}
+
+/*menu--------------------------------------*/
+.menuButtons {
+    width: fit-content;
+    display: block;
+}
+
+.menuTitles {
+    font-size: 45px;
+}
+
+.menuDesc {
+    font-size: 20px;
+
+}
+
+/*wrappers----------------------------------*/
 #wrapper1 {
     height: inherit;
     width: 95%;
     display: flex;
     justify-content: flex-end;
+}
+
+#wrapper2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+}
+
+#wrapper3 {
+    display: flex;
+    flex-direction: row;
+    height: 80vh;
+    width: 100vw;
+}
+
+#wrapper5 {
+    width: 70%;
 }
