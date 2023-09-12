@@ -1,0 +1,9 @@
+#wrapper5 {
+    height: inherit;
+    background-image: url(/media/Ik.jpg);
+    background-size: cover;
+    object-position: center;
+    background-repeat: no-repeat;
+    transform: scaleX(-1);
+    border-radius: 0 40vh 40vh 0;
+}
