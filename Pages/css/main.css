@@ -4,6 +4,10 @@ body {
     font-family: Verdana;
 }
 
+body>* {
+    user-select: none;
+}
+
 p {
     margin: 0;
 }
@@ -31,7 +35,7 @@ footer {
     bottom: 0;
 }
 
-img {
+img,input,label{
     height: inherit;
 }
 

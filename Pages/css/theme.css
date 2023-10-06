@@ -1,0 +1,66 @@
+:root {
+    --light-text: hsl(0, 0%, 0%);
+    --light-bg: hsl(0, 0%, 100%);
+    --dark-text: hsl(0, 0%, 100%); /* Define --dark-text */
+    --dark-bg: hsl(0, 0%, 10%); /* Define --dark-bg */
+    --img: saturate(100%);
+    --transition-speed: 0.5s;
+}
+
+body {
+    color: var(--text); /* Use a single variable for text color */
+    background-color: var(--bg); /* Use a single variable for background color */
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+    margin: 0;
+    font-family: Verdana, sans-serif;
+}
+
+.back {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--bg);
+    transition: background-color var(--transition-speed);
+    z-index: -1;
+}
+
+.theme-switch {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.theme-switch #toggle-theme {
+    display: none;
+}
+
+.theme-switch #theme-icon {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+    filter: invert(var(--img));
+    transition: filter var(--transition-speed);
+}
+
+/* Dark Mode */
+.theme-switch #toggle-theme:checked ~ .back {
+    --bg: var(--dark-bg); /* Change background color in dark mode */
+}
+
+.theme-switch #toggle-theme:checked ~ body {
+    --text: var(--dark-text); /* Change text color in dark mode */
+}
+
+.theme-switch #toggle-theme:checked ~ .theme-switch #theme-icon {
+    filter: invert(0); /* Inverts the colors of the icon in dark mode */
+}
+
+/* Image Contrast for Dark and Light Modes */
+.theme-switch #toggle-theme:checked ~ .dec {
+    filter: contrast(0); /* Set contrast to 0 for images with class .dec in dark mode */
+}
+
+.theme-switch #toggle-theme:not(:checked) ~ .dec {
+    filter: contrast(100%); /* Set contrast to 100% for images with class .dec in light mode */
+}
