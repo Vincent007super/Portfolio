@@ -10,7 +10,7 @@
     flex-direction: column;
 }
 
-#wrapper5 * {
+#wrapper5 > * {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -18,10 +18,35 @@
 }
 
 #wrapper6 {
+    width: 90%;
     height: 85%;
     align-items: center;
 }
 
 #wrapper7 {
     height: 15%;
+}
+
+#wrapper8 {
+    display: flex;
+    width: 100%;
+    height: max-content;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#wrapper9 {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 100%;
+}
+
+#filler1 {
+    width: 20%;
+}
+
+.hyper {
+    width: 30%;
+    height: 250px;
 }
