@@ -94,3 +94,13 @@ a {
     width: 100vw;
 }
 
+#wrapper5 {
+    height: inherit;
+    background-color: rgba(0, 0, 0, 0.346);
+    background-size: cover;
+    object-position: center;
+    background-repeat: no-repeat;
+    border-radius: 40vh 0 0 40vh;
+    display: flex;
+    flex-direction: column;
+}
