@@ -1,12 +1,14 @@
-body,body>*{
+body,
+body > * {
     margin: 0;
-    overflow-y: hidden;
     font-family: Verdana;
 }
 
-body>* {
+body > * {
     user-select: none;
+    overflow-y: hidden; 
 }
+
 
 p {
     margin: 0;

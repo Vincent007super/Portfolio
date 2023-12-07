@@ -6,6 +6,20 @@
     justify-content: center;
 }
 
+#background {
+    position: fixed;
+    height: 80vh; 
+    width: 67.4%;
+    object-fit: cover;
+    right: 0;
+    border-radius: 40vh 0 0 40vh;
+    z-index: -1;
+    top: 10%;
+    filter:contrast(0.3) ;
+    animation: dis 1s 3s forwards;
+}
+
+
 #wrapper6 {
     height: 85%;
     align-items: center;
@@ -70,4 +84,13 @@ button {
     transform: translateX(50vw);
     width: 0vw;
     height: 85%;
+}
+
+@keyframes dis {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
