@@ -41,8 +41,7 @@ button {
 }
 
 .hyper {
-    width: 30%;
-    height: 250px;
+    height: 25vh;
     transition: height 1s;
     border: none;
 }

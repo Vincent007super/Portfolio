@@ -38,3 +38,17 @@ function setPrj(){
 }
 
 setPrj();
+
+// Links
+let images = ["beus.png", ];
+let links = ["https://sheesher.000webhostapp.com/", ];
+let img = document.querySelectorAll('.hyper');
+let href = document.querySelectorAll('.prjLink')
+
+
+for (let i = 0; i < images.length; i++) {
+    img[i].setAttribute("src", "../../media/" + images[i]);
+    href[i].setAttribute("href", links[i]);
+    href[i].setAttribute("target", "_blank");
+
+}
