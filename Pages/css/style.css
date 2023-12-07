@@ -1,0 +1,6 @@
+#wrapper5 {
+
+    background-image: url(/media/Ik.jpg);
+    transform:scaleX(-1) ;
+    border-radius: 0 40vh 40vh 0 !important;
+}
