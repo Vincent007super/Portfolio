@@ -1,0 +1,27 @@
+#back {
+    width: 100vw;
+    height: 100vh;
+    transition: all 1.5s;
+    position: fixed;
+    z-index: -1;
+}
+
+.back1 {
+    background-color: rgba(58, 154, 185, 1);
+}
+
+.back2 {
+    background-color: rgba(35, 92, 133, 1);
+}
+
+.back3 {
+    background-color: rgba(20, 59, 95, 1);
+}
+
+.back4 {
+    background-color: rgba(26, 37, 75, 1);
+}
+
+.back5 {
+    background-color: rgba(20, 17, 40, 1);
+}
