@@ -3,6 +3,7 @@ let maxScroll = document.querySelector('body').offsetHeight;
 let scroll = maxScroll / 5;
 let background = document.getElementById("back");
 
+
 function handleScroll(e) {
     scrollCount = this.scrollY
     if (scrollCount < (scroll * 1)) {
