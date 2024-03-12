@@ -8,6 +8,10 @@ html {
     height: 0;
 }
 
+* {
+    margin: 0;
+}
+
 .wrapper {
     display: flex;
     position: absolute;
@@ -23,5 +27,20 @@ html {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 40vw;
+    gap: 2%;
+}
+
+.wrapper2 {
+    display: flex;
+    flex-direction: column;
+    gap: 2%;
+}
+
+#title_wrapper {
+    max-width: 40%;
+}
+
+#about_me {
+    max-width: 90%;
+    flex-direction: row;
 }
