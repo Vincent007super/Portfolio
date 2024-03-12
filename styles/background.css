@@ -4,6 +4,7 @@
     transition: all 1.5s;
     position: fixed;
     z-index: -1;
+    top: 0;
 }
 
 .back1 {
