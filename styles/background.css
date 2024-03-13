@@ -26,3 +26,19 @@
 .back5 {
     background-color: rgba(20, 17, 40, 1);
 }
+
+.active {
+    filter: blur(0px);
+}
+
+.waiting {
+    filter: blur(50px);
+}
+
+.waiting2 {
+    filter: blur(100px);
+}
+
+.remove {
+    transform: scale(500)
+}

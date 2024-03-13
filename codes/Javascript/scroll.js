@@ -27,3 +27,27 @@ function setClassesBack(num){
 }
 
 window.addEventListener("scroll", handleScroll);
+
+let page = document.querySelectorAll('.wrapper1');
+let page2 = document.getElementsByClassName('Page2');
+let curPage = 0;
+
+function setPage(){
+    console.log("test setPage werkt!")
+    for (let i = 0; i < page.length; i++) {
+        if(i < curPage){
+            page[i].classList.remove("active")
+            page[i].classList.add("remove")
+        }else if(i > curPage){
+            page[i].classList.add("waiting");
+            page[i].classList.remove("active");
+        }else{
+
+            page[i].classList.remove("remove")
+            page[i].classList.remove("waiting")
+            page[i].classList.add("active");
+        }
+    }
+}
+
+setPage();
