@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+canvas {
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+#wrapper1 {
+    display: flex;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    justify-content: end;
+    align-items: center;
+    align-content: center;
+}
+
+.progress-bar {
+    width: fit-content;
+    background-color: #ffffff38;
+    border-radius: 99px;
+    padding: 3px;
+    height: fit-content;
+    margin-right: 3vw;
+}
+
+.progress-points {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.progress-point {
+    width: 10px;
+    height: 10px;
+    background-color: #b4b3b3;
+    border-radius: 50%;
+    margin: 10px 0;
+    transition: all 4.5s ease;
+}
+
+.progress-point.active {
+    width: 20px;
+    height: 20px;
+    background-color: #ffffff;
+}
