@@ -10,7 +10,7 @@ let delta = -230;
 let current = 0;
 let startZ = 52;
 let canScroll = true;
-const speed = 0.03;
+const speed = 0.015;
 
 // Aanmaken van cardpoints
 for (let i = 0; i < textures.length +1; i++) {
