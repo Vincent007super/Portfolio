@@ -23,6 +23,22 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
+    // Set up video
+    const video = document.createElement('video');
+    video.src = 'media/vid/surface.mp4';
+    video.loop = true;
+    video.muted = true;
+    video.play();
+
+    const videoTexture = new THREE.VideoTexture(video);
+    const videoMaterial = new THREE.MeshBasicMaterial({ map: videoTexture, side: THREE.DoubleSide });
+    const videoGeometry = new THREE.PlaneGeometry(16, 9);
+    videoPlane = new THREE.Mesh(videoGeometry, videoMaterial);
+    videoPlane.position.set(0, 0, 50);
+    videoPlane.scale.set(25, 25, 3);
+    scene.add(videoPlane);
+
+    console.log('Video plane added at position:', videoPlane.position);
 
     // Set up image planes
     textures.forEach((texture, index) => {
@@ -62,6 +78,13 @@ function updatePositions() {
     updateBackground();
 }
 
+function updatePlaneOpacities() {
+    const planeDistance = 50; // Distance at which planes start to fade
+    [videoPlane, ...planes].forEach((plane, index) => {
+        const distance = Math.abs(camera.position.z - plane.position.z);
+        const opacity = Math.max(0, Math.min(1, 1 - (distance - planeDistance) / 100));
+        plane.material.opacity = opacity;
+    });
 }
 
 function onWheelScroll(event) {

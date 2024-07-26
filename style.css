@@ -47,3 +47,12 @@ canvas {
     height: 20px;
     background-color: #ffffff;
 }
+
+#video {
+    display: none; /* Verberg de HTML-video */
+}
+
+.video-plane {
+    opacity: 0.8; /* Pas opacity toe */
+    filter: blur(5px) contrast(1.2); /* Pas blur en contrast toe */
+}
