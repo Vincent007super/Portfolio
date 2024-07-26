@@ -1,98 +1,110 @@
-let scene, camera, renderer, planes = [];
+let scene, camera, renderer, planes = [], videoPlane;
+let currentIndex = 0;
+const textures = [
+    'textures/who2.png',
+    'textures/who2.png',
+    'textures/who2.png',
+    'textures/who2.png',
+    'textures/who2.png'
+];
+const totalElements = textures.length; // +1 for the video
+let delta = 150;
+let canScroll = true;
+const speed = 0.005;
+let startZ = 150;
+
+console.log('Total Elements:', totalElements);
+console.log('Textures:', textures);
 
 function init() {
     scene = new THREE.Scene();
-    scene.background = null;  // Maak de achtergrond van de scène doorzichtig
-
-    camera = new THREE.PerspectiveCamera(
-        100,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-    );
-
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });  // Schakel alpha in bij het maken van de renderer
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
-    camera.position.z = 60; // Verplaats de camera verder naar achteren
 
-    for (let i = 0; i < textures.length; i++) {
+
+    // Set up image planes
+    textures.forEach((texture, index) => {
         const geometry = new THREE.PlaneGeometry(16, 9);
-        const texture = new THREE.TextureLoader().load(textures[i], function (texture) {
-            texture.minFilter = THREE.LinearFilter;
-            texture.magFilter = THREE.LinearFilter;
-            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+        const material = new THREE.MeshBasicMaterial({
+            map: new THREE.TextureLoader().load(texture),
+            side: THREE.DoubleSide,
+            transparent: true
         });
-        const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true, alphaTest: 0.1 });
         const plane = new THREE.Mesh(geometry, material);
-        plane.position.set(0, 0, cardPoint[i] + (current * delta) + startZ); // Plaats de planes op de juiste afstand
+        plane.position.set(0, 0, -50 + (index - 1) * -delta);
+        plane.scale.set(3, 3, 1);
         scene.add(plane);
         planes.push(plane);
-    }
+        console.log(`Plane ${index} added at position:`, plane.position);
+    });
 
-    // Create progress points
+    camera.position.z = startZ;
+    console.log('Initial camera position:', camera.position);
+
+    setupProgressBar();
+
+    window.addEventListener('resize', onWindowResize);
+    window.addEventListener('wheel', onWheelScroll, { passive: false });
+}
+
+function updatePositions() {
+    const targetZ = startZ - (currentIndex * delta);
+    camera.position.z = lerp(camera.position.z, targetZ, speed);
+
+    console.log('Camera Z:', camera.position.z.toFixed(2), 'Target Z:', targetZ, 'Current Index:', currentIndex);
+
+    // Add this line to update plane opacities
+    updatePlaneOpacities();
+
+    updateProgressBar();
+    updateBackground();
+}
+
+}
+
+function onWheelScroll(event) {
+    console.log('Scrolling, canScroll:', canScroll);
+    event.preventDefault();
+    if (!canScroll) return;
+
+    const scrollDirection = Math.sign(event.deltaY);
+    currentIndex = Math.max(0, Math.min(currentIndex + scrollDirection, totalElements - 1));
+    console.log('New Current Index:', currentIndex);
+
+    canScroll = false;
+    setTimeout(() => {
+        canScroll = true;
+        console.log('Scroll enabled');
+    }, 300);
+}
+
+function setupProgressBar() {
     const progressPointsContainer = document.querySelector('.progress-points');
-    for (let i = 0; i < textures.length; i++) {
+    progressPointsContainer.innerHTML = '';
+    for (let i = 0; i < totalElements; i++) {
         const point = document.createElement('div');
         point.classList.add('progress-point');
         progressPointsContainer.appendChild(point);
     }
+}
 
-    window.addEventListener('resize', onWindowResize);
+function updateProgressBar() {
+    const points = document.querySelectorAll('.progress-point');
+    points.forEach((point, index) => {
+        point.classList.toggle('active', index === currentIndex);
+    });
 }
 
 function lerp(start, end, t) {
     return start * (1 - t) + end * t;
 }
 
-function lerpColor(startColor, endColor, t) {
-    const start = startColor.match(/\d+/g).map(Number);
-    const end = endColor.match(/\d+/g).map(Number);
-    const result = start.map((s, i) => i < 3 ? Math.round(lerp(s, end[i], t)) : lerp(s, end[i], t));
-    return `rgba(${result[0]}, ${result[1]}, ${result[2]}, ${result[3]})`;
-}
-
-function updateBackground() {
-    const cardIndex = Math.abs(current);
-    const nextCardIndex = cardIndex + 1;
-    const cardPointDistance = Math.abs(delta);
-    const currentCardPosition = Math.abs(planes[cardIndex].position.z - (cardPoint[cardIndex] + startZ));
-    const transitionProgress = currentCardPosition / cardPointDistance;
-
-    const startColor = "rgba(33 173 218, 1)";
-    const endColor = "rgba(20, 17, 40, 1)";
-    const backgroundColor = lerpColor(startColor, endColor, Math.min(Math.max((cardIndex + transitionProgress) / (textures.length + 2), 0), 1));
-    document.body.style.transition = 'background-color 0.5s ease';  // Voeg overgang toe
-    document.body.style.backgroundColor = backgroundColor;
-}
-
-function updateProgressBar() {
-    const points = document.querySelectorAll('.progress-point');
-    points.forEach((point, index) => {
-        if (index === -current) {
-            point.classList.add('active');
-        } else {
-            point.classList.remove('active');
-        }
-    });
-}
-
-function updateScaleAndPosition() {
-    planes.forEach((plane, index) => {
-        let posZ = cardPoint[index] + (current * delta) + startZ;
-        plane.position.z = lerp(plane.position.z, posZ, speed); //laatste waarde is animatie snelheid
-    });
-
-    camera.position.z = 60; // positie waar camera inlaad
-
-    updateProgressBar();
-    updateBackground();
-}
-
 function animate() {
     requestAnimationFrame(animate);
+    updatePositions();
     renderer.render(scene, camera);
-    updateScaleAndPosition();
 }
 
 function onWindowResize() {
@@ -101,5 +113,19 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function updateBackground() {
+    const progress = currentIndex / (totalElements - 1);
+    const startColor = { r: 33, g: 173, b: 218 };
+    const endColor = { r: 20, g: 17, b: 40 };
+    const currentColor = {
+        r: Math.round(lerp(startColor.r, endColor.r, progress)),
+        g: Math.round(lerp(startColor.g, endColor.g, progress)),
+        b: Math.round(lerp(startColor.b, endColor.b, progress))
+    };
+    document.body.style.backgroundColor = `rgb(${currentColor.r}, ${currentColor.g}, ${currentColor.b})`;
+}
+
 init();
 animate();
+
+console.log('Script fully loaded and executed');
