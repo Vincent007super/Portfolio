@@ -13,8 +13,20 @@ let canScroll = true;
 const speed = 0.005;
 let startZ = 150;
 
+let audioElements = [];
+let currentAudio = null;
+let nextAudio = null;
+
 console.log('Total Elements:', totalElements);
 console.log('Textures:', textures);
+
+let audioSources = [
+    'media/audio/ambience_top.mp3',
+    'media/audio/ambience_2.mp3',
+    'media/audio/ambience_3.mp3',
+    'media/audio/ambience_4.mp3',
+    'media/audio/ambience_5.mp3'
+];
 
 function init() {
     scene = new THREE.Scene();
@@ -56,6 +68,9 @@ function init() {
         console.log(`Plane ${index} added at position:`, plane.position);
     });
 
+    // Initialize audio
+    initAudio();
+
     camera.position.z = startZ;
     console.log('Initial camera position:', camera.position);
 
@@ -65,17 +80,88 @@ function init() {
     window.addEventListener('wheel', onWheelScroll, { passive: false });
 }
 
+function initAudio() {
+    audioSources.forEach((src, index) => {
+        const audio = new Audio(src);
+        audio.loop = true;
+        audio.volume = 0;
+        audioElements.push(audio);
+        console.log(`Audio ${index} initialized:`, src);
+    });
+    currentAudio = audioElements[0];
+    currentAudio.volume = 0.45;
+    currentAudio.play();
+    console.log('Initial audio started:', audioSources[0]);
+}
+
 function updatePositions() {
     const targetZ = startZ - (currentIndex * delta);
     camera.position.z = lerp(camera.position.z, targetZ, speed);
 
-    console.log('Camera Z:', camera.position.z.toFixed(2), 'Target Z:', targetZ, 'Current Index:', currentIndex);
 
     // Add this line to update plane opacities
     updatePlaneOpacities();
 
     updateProgressBar();
     updateBackground();
+}
+
+function updateAudio() {
+    const nextIndex = Math.min(currentIndex, audioElements.length - 1);
+    console.log('Updating audio. Current Index:', currentIndex, 'Next Audio Index:', nextIndex);
+    
+    if (currentAudio !== audioElements[nextIndex]) {
+        console.log('Audio change detected');
+        if (currentAudio) {
+            console.log('Fading out current audio:', audioSources[audioElements.indexOf(currentAudio)]);
+            fadeOutAudio(currentAudio);
+        }
+        currentAudio = audioElements[nextIndex];
+        console.log('Fading in new audio:', audioSources[nextIndex]);
+        fadeInAudio(currentAudio);
+    } else {
+        console.log('No audio change needed');
+    }
+}
+
+function fadeOutAudio(audio, duration = 1000) {
+    console.log('Starting fade out for audio:', audioSources[audioElements.indexOf(audio)]);
+    const fadeInterval = 50;
+    const steps = duration / fadeInterval;
+    const volumeStep = audio.volume / steps;
+
+    const fadeOutInterval = setInterval(() => {
+        if (audio.volume > volumeStep) {
+            audio.volume -= volumeStep;
+            console.log('Fading out. Current volume:', audio.volume.toFixed(2));
+        } else {
+            audio.volume = 0;
+            audio.pause();
+            clearInterval(fadeOutInterval);
+            console.log('Fade out complete. Audio paused.');
+        }
+    }, fadeInterval);
+}
+
+function fadeInAudio(audio, duration = 1000) {
+    console.log('Starting fade in for audio:', audioSources[audioElements.indexOf(audio)]);
+    const fadeInterval = 50;
+    const steps = duration / fadeInterval;
+    const volumeStep = 0.45 / steps;  
+
+    audio.volume = 0;
+    audio.play();
+
+    const fadeInInterval = setInterval(() => {
+        if (audio.volume < 0.45 - volumeStep) {
+            audio.volume += volumeStep;
+            console.log('Fading in. Current volume:', audio.volume.toFixed(2));
+        } else {
+            audio.volume = 0.45;
+            clearInterval(fadeInInterval);
+            console.log('Fade in complete. Final volume:', audio.volume.toFixed(2));
+        }
+    }, fadeInterval);
 }
 
 function updatePlaneOpacities() {
@@ -93,8 +179,13 @@ function onWheelScroll(event) {
     if (!canScroll) return;
 
     const scrollDirection = Math.sign(event.deltaY);
-    currentIndex = Math.max(0, Math.min(currentIndex + scrollDirection, totalElements - 1));
-    console.log('New Current Index:', currentIndex);
+    const newIndex = Math.max(0, Math.min(currentIndex + scrollDirection, totalElements - 1));
+    
+    if (newIndex !== currentIndex) {
+        currentIndex = newIndex;
+        console.log('New Current Index:', currentIndex);
+        updateAudio();
+    }
 
     canScroll = false;
     setTimeout(() => {
