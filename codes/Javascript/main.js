@@ -17,6 +17,9 @@ let audioElements = [];
 let currentAudio = null;
 let nextAudio = null;
 
+let previousIndex = -1;
+let videoOverlay2, videoOverlay3;
+
 console.log('Total Elements:', totalElements);
 console.log('Textures:', textures);
 
@@ -35,7 +38,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Set up video
+    // Set up main video
     const video = document.createElement('video');
     video.src = 'media/vid/surface.mp4';
     video.loop = true;
@@ -68,6 +71,9 @@ function init() {
         console.log(`Plane ${index} added at position:`, plane.position);
     });
 
+    // Set up video overlays
+    setupVideoOverlays();
+
     // Initialize audio
     initAudio();
 
@@ -78,6 +84,115 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('wheel', onWheelScroll, { passive: false });
+}
+
+function setupVideoOverlays() {
+    // Video overlay 2 (for planes 2 and 3)
+    const video2 = document.createElement('video');
+    video2.src = 'media/vid/light.mp4';
+    video2.loop = true;
+    video2.muted = true;
+    video2.play();
+    video2.oncanplay = () => console.log('Video 2 loaded and can play');
+
+
+    const videoTexture2 = new THREE.VideoTexture(video2);
+    const videoMaterial2 = new THREE.MeshBasicMaterial({
+        map: videoTexture2,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending
+    });
+    videoOverlay2 = new THREE.Mesh(new THREE.PlaneGeometry(16, 9), videoMaterial2);
+    videoOverlay2.scale.set(68, 68, 1);
+    camera.add(videoOverlay2);
+    videoOverlay2.position.set(0, -145, -200);
+
+    // Video overlay 3 (for planes 4 and 5)
+    const video3 = document.createElement('video');
+    video3.src = 'media/vid/dust.mp4';
+    video3.loop = true;
+    video3.muted = true;
+    video3.play();
+    video3.oncanplay = () => console.log('Video 3 loaded and can play');
+
+    const videoTexture3 = new THREE.VideoTexture(video3);
+    const videoMaterial3 = new THREE.MeshBasicMaterial({
+        map: videoTexture3,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending
+    });
+    videoOverlay3 = new THREE.Mesh(new THREE.PlaneGeometry(16, 9), videoMaterial3);
+    videoOverlay3.scale.set(60, 60, 1);
+    camera.add(videoOverlay3);
+    videoOverlay3.position.set(0, 0, -200);
+
+    scene.add(camera);
+}
+
+function fadeTo(material, targetOpacity, duration = 1000) {
+    const currentOpacity = { opacity: material.opacity };
+    
+    console.log(`Starting fade to ${targetOpacity} for material with current opacity: ${material.opacity}`);
+    
+    new TWEEN.Tween(currentOpacity)
+        .to({ opacity: targetOpacity }, duration)
+        .easing(TWEEN.Easing.Quadratic.InOut) // Apply easing
+        .onUpdate(() => {
+            material.opacity = currentOpacity.opacity;
+        })
+        .onComplete(() => {
+            console.log(`Fade complete to ${targetOpacity} for material. Final opacity: ${material.opacity}`);
+        })
+        .start();
+}
+
+function updateVideoOverlays() {
+    const fadeDuration = 2000;  // Duration in milliseconds
+    const maxOpacity2 = 0.75;
+    const maxOpacity3 = 0.75;
+
+    if (currentIndex <= 1) {
+        if (Math.abs(videoOverlay2.material.opacity - maxOpacity2) > 0.01) {
+            console.log('Starting fade for videoOverlay2 to maxOpacity2:', maxOpacity2);
+            fadeTo(videoOverlay2.material, maxOpacity2, fadeDuration);
+        }
+        if (Math.abs(videoOverlay3.material.opacity - 0) > 0.01) {
+            console.log('Starting fade for videoOverlay3 to 0');
+            fadeTo(videoOverlay3.material, 0, fadeDuration);
+        }
+    } else if (currentIndex === 2) {
+        if (Math.abs(videoOverlay2.material.opacity - (maxOpacity2 * 0.6)) > 0.01) {
+            console.log('Starting fade for videoOverlay2 to:', maxOpacity2 * 0.6);
+            fadeTo(videoOverlay2.material, maxOpacity2 * 0.6, fadeDuration);
+        }
+        if (Math.abs(videoOverlay3.material.opacity - (maxOpacity3 * 0.4)) > 0.01) {
+            console.log('Starting fade for videoOverlay3 to:', maxOpacity3 * 0.4);
+            fadeTo(videoOverlay3.material, maxOpacity3 * 0.4, fadeDuration);
+        }
+    } else if (currentIndex === 3) {
+        if (Math.abs(videoOverlay2.material.opacity - 0) > 0.01) {
+            console.log('Starting fade for videoOverlay2 to 0');
+            fadeTo(videoOverlay2.material, 0, fadeDuration);
+        }
+        if (Math.abs(videoOverlay3.material.opacity - (maxOpacity3 * 0.6)) > 0.01) {
+            console.log('Starting fade for videoOverlay3 to:', maxOpacity3 * 0.6);
+            fadeTo(videoOverlay3.material, maxOpacity3 * 0.6, fadeDuration);
+        }
+    } else if (currentIndex >= 4) {
+        if (Math.abs(videoOverlay2.material.opacity - 0) > 0.01) {
+            console.log('Starting fade for videoOverlay2 to 0');
+            fadeTo(videoOverlay2.material, 0, fadeDuration);
+        }
+        if (Math.abs(videoOverlay3.material.opacity - maxOpacity3) > 0.01) {
+            console.log('Starting fade for videoOverlay3 to maxOpacity3:', maxOpacity3);
+            fadeTo(videoOverlay3.material, maxOpacity3, fadeDuration);
+        }
+    }
+    console.log(`Video 2 opacity: ${videoOverlay2.material.opacity.toFixed(2)}, Video 3 opacity: ${videoOverlay3.material.opacity.toFixed(2)}`);
 }
 
 function initAudio() {
@@ -98,13 +213,17 @@ function updatePositions() {
     const targetZ = startZ - (currentIndex * delta);
     camera.position.z = lerp(camera.position.z, targetZ, speed);
 
-
-    // Add this line to update plane opacities
     updatePlaneOpacities();
-
     updateProgressBar();
     updateBackground();
+
+    if (currentIndex !== previousIndex) {
+        console.log('Index changed. Updating video overlays.');
+        updateVideoOverlays();
+        previousIndex = currentIndex;
+    }
 }
+
 
 function updateAudio() {
     const nextIndex = Math.min(currentIndex, audioElements.length - 1);
@@ -218,8 +337,10 @@ function lerp(start, end, t) {
 function animate() {
     requestAnimationFrame(animate);
     updatePositions();
+    TWEEN.update(); // This line is crucial for TWEEN animations to work
     renderer.render(scene, camera);
 }
+
 
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;

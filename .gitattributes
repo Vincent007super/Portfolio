@@ -1,0 +1,5 @@
+media/vid/*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+media/vid/dust.mp4 filter=lfs diff=lfs merge=lfs -text
+media/vid/light.mp4 filter=lfs diff=lfs merge=lfs -text
+media/vid/surface.mp4 filter=lfs diff=lfs merge=lfs -text
