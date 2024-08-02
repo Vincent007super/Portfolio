@@ -10,7 +10,7 @@ const textures = [
 const totalElements = textures.length; // +1 for the video
 let delta = 150;
 let canScroll = true;
-const speed = 0.005;
+const speed = 0.009;
 let startZ = 150;
 
 let audioElements = [];
