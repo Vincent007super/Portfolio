@@ -1,4 +1,8 @@
+import { initFishSchool, animateFishSchool } from './fish.js';
+
+
 let scene, camera, renderer, planes = [], videoPlane;
+let fishSchoolPlane;
 let currentIndex = 0;
 const textures = [
     'textures/who2.png',
@@ -67,7 +71,25 @@ function init() {
         scene.add(plane);
         planes.push(plane);
         console.log(`Plane ${index} added at position:`, plane.position);
+
+        // Initialize fish school for the second plane
+        if (index === 1) {
+            fishSchoolPlane = plane;
+            console.log('Fish school plane set:', fishSchoolPlane);
+            initFishSchool(fishSchoolPlane);
+            console.log('Fish school initialized on plane:', fishSchoolPlane);
+        }
     });
+    // if (fishSchoolPlane) {
+    //     initFishSchool(fishSchoolPlane);
+    //     console.log('Fish school initialized on plane:', fishSchoolPlane);
+    // } else {
+    //     console.error('Fish school plane not found');
+    // }
+
+    if (planes[1]) {
+        initFishSchool(planes[1]);
+    }
 
     initAudio();
 
@@ -95,22 +117,10 @@ function initAudio() {
     console.log('Initial audio started:', audioSources[0]);
 }
 
-function updatePositions() {
-    const targetZ = startZ - (currentIndex * delta);
-    camera.position.z = lerp(camera.position.z, targetZ, speed);
-
-
-    // Add this line to update plane opacities
-    updatePlaneOpacities();
-
-    updateProgressBar();
-    updateBackground();
-}
-
 function updateAudio() {
     const nextIndex = Math.min(currentIndex, audioElements.length - 1);
     console.log('Updating audio. Current Index:', currentIndex, 'Next Audio Index:', nextIndex);
-    
+
     if (currentAudio !== audioElements[nextIndex]) {
         console.log('Audio change detected');
         if (currentAudio) {
@@ -148,7 +158,7 @@ function fadeInAudio(audio, duration = 1000) {
     console.log('Starting fade in for audio:', audioSources[audioElements.indexOf(audio)]);
     const fadeInterval = 50;
     const steps = duration / fadeInterval;
-    const volumeStep = 0.45 / steps;  
+    const volumeStep = 0.45 / steps;
 
     audio.volume = 0;
     audio.play();
@@ -172,9 +182,27 @@ function updatePlaneOpacities() {
         const distance = Math.abs(camera.position.z - plane.position.z);
         const opacity = Math.max(0, Math.min(1, 1 - (distance - planeDistance) / 100));
         plane.material.opacity = opacity;
+
+        // Pas de zichtbaarheid van de vissengroep aan
+        if (index === 1 && plane.children.length > 0) {
+            plane.children[0].visible = opacity > 0;
+        }
     });
 }
 
+function updatePositions() {
+    const targetZ = startZ - (currentIndex * delta);
+    camera.position.z = lerp(camera.position.z, targetZ, speed);
+
+
+    // Add this line to update plane opacities
+    updatePlaneOpacities();
+
+    updateProgressBar();
+    updateBackground();
+}
+
+// General code -----------------------------------------------------------------------------------------------------------------
 function onWheelScroll(event) {
     console.log('Scrolling, canScroll:', canScroll);
     event.preventDefault();
@@ -182,7 +210,7 @@ function onWheelScroll(event) {
 
     const scrollDirection = Math.sign(event.deltaY);
     const newIndex = Math.max(0, Math.min(currentIndex + scrollDirection, totalElements - 1));
-    
+
     if (newIndex !== currentIndex) {
         currentIndex = newIndex;
         console.log('New Current Index:', currentIndex);
@@ -217,9 +245,17 @@ function lerp(start, end, t) {
     return start * (1 - t) + end * t;
 }
 
-function animate() {
+function animate(time) {
     requestAnimationFrame(animate);
     updatePositions();
+    // if (fishSchoolPlane && fishSchoolPlane.children.length > 0) {
+    //     animateFishSchool(time);
+    // } else {
+    //     console.log('Fish school not ready for animation');
+    // }
+    if (planes[1]) {
+        animateFishSchool(time);
+    }
     renderer.render(scene, camera);
 }
 
