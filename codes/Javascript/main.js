@@ -7,7 +7,7 @@ const textures = [
     'textures/who2.png',
     'textures/who2.png'
 ];
-const totalElements = textures.length; // +1 for the video
+const totalElements = textures.length;
 let delta = 150;
 let canScroll = true;
 const speed = 0.009;
@@ -28,6 +28,7 @@ let audioSources = [
     'media/audio/ambience_5.mp3'
 ];
 
+// initialize webgl and three.js ----------------------------------------------------------------------------------------
 function init() {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -68,7 +69,6 @@ function init() {
         console.log(`Plane ${index} added at position:`, plane.position);
     });
 
-    // Initialize audio
     initAudio();
 
     camera.position.z = startZ;
@@ -80,6 +80,7 @@ function init() {
     window.addEventListener('wheel', onWheelScroll, { passive: false });
 }
 
+// Audio code -----------------------------------------------------------------------------------------------------------
 function initAudio() {
     audioSources.forEach((src, index) => {
         const audio = new Audio(src);
@@ -164,6 +165,7 @@ function fadeInAudio(audio, duration = 1000) {
     }, fadeInterval);
 }
 
+// Plane code -----------------------------------------------------------------------------------------------------------------
 function updatePlaneOpacities() {
     const planeDistance = 50; // Distance at which planes start to fade
     [videoPlane, ...planes].forEach((plane, index) => {
