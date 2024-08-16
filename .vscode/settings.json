@@ -1,0 +1,6 @@
+{
+    "CodeGPT.apiKey": "CodeGPT Enterprise",
+    "CodeGPT.Autocomplete.enabled": true,
+    "CodeGPT.Autocomplete.maxTokens": 1024,
+    "CodeGPT.Autocomplete.suggestionDelay": 500
+}

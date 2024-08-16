@@ -3,101 +3,25 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main page</title>
-    <link rel="icon" type="image/x-icon" href="media/Screenshot 2023-08-29 at 13.50.53.png">
-    <!--css-->
-    <link rel="stylesheet" href="Pages/css/style.css">
-    <link rel="stylesheet" href="Pages/css/main.css">
+    <title>Portfolio - Vincent</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <div id="name_wrapper">
-        <div id="letters">
-            <div class="name" id="letter1">
-                V
-            </div>
-            <div class="name" id="letter2">
-                I
-            </div>
-            <div class="name" id="letter3">
-                N
-            </div>
-            <div class="name" id="letter4">
-                C
-            </div>
-            <div class="name" id="letter5">
-                E
-            </div>
-            <div class="name" id="letter6">
-                N
-            </div>
-            <div class="name" id="letter7">
-                T
-            </div>
-        </div>
-        <div id="line"></div>
-    </div>
-
-    <img src="" alt="">
-
-    <div id="menu">
-        <div id="menuSelect">
-            <a class="menuButton" href="#">
-                <div class="menuLinks" id="selected">Home</div>
-            </a>
-            <a class="menuButton" href="Pages/html/CV.html">
-                <div class="menuLinks">CV</div>
-            </a>
-            <a class="menuButton" href="Pages/html/projectpage.html">
-                <div class="menuLinks">Project's</div>
-            </a>
-            <a class="menuButton" href="Pages/html/contact.html">
-                <div class="menuLinks">Contact</div>
-            </a>
-        </div>
-    </div>
     <div id="wrapper1">
-        <div>&#8609;</div>
-    </div>
-    <div id="main">
-        <h1>Hallo, I am Vincent</h1>
-        <div class="mainLine">
-            <img src="media/me.JPG" alt="A picture of me">
-            <p class="hyper">I am 18 years old as of making this portfolio and am a student at Grafisch Lyceum Rotterdam
-                situated in
-                the Netherlands. I study software development and am training in with HTML, CSS and JS. Whilst also
-                dipping my toes in PHP.
-                My goal is to be able make an adequate website that fulfills any desires a client or a I may have. I wish
-                to become better in designing and working with back-end coding.
-            </p>
-        </div>
-        <div class="mainLine">
-            <p class="hyper">I am a very dedicated gamer, considering I am playing on a daily basis. I play a lot of
-                Heart of Iron IV, which is a strategy game, Dead by Daylight and Phasmaphobia.
-                Of course only playing wouldn't be very healthy. Which is why i am also trying to modeling. I currently
-                have made: a spitfire, a panzer II and still building a Gneisenau battlecruiser.
-                Apart from playing video games and building models, i also like video editing. I am using Davinci
-                Resolve for most of my editing and am learning new things every time i get a chance to edit.
-            </p>
-            <img src="media/davinci.jpg" alt="Davinci Resolve">
-        </div>
-        <div class="mainLine">
-            <img src="media/napoleon.jpg" alt="napoleon">
-            <p class="hyper">Now, I am well known amongst my friends and family that i am a history nerd. I know a lot
-                of different battles fought and I know what kind of strategies different generals used to gain the upper
-                hand.
-                I mostly specify in the time period of 1933 to 1945 however. From the sands of Africa, to the Seas of
-                Asia. From the Beaches of the western front, to the mountains of the eastern front.
-                I enjoy research that period because you can always learn more. It was a world war after all. Of course
-                I also have a taste in music. Although it is very diverse. My favorite band is sabaton,
-                I like their way of teaching history in the form of music and their music bangs. My favorite song is
-                1812 overture (no, this is not a joke).
-            </p>
+        <div class="progress-bar">
+            <div class="progress-points"></div>
         </div>
     </div>
-
+    <video id="video" width="320" height="240" autoplay loop muted>
+        <source src="media/vid/surface.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/104/three.js"></script>
+    <script type="module" src="codes/Javascript/fish.js"></script>
+    <script type="module" src="codes/Javascript/main.js"></script>
 </body>
 
 </html>
