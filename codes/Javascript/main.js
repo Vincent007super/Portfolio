@@ -1,8 +1,11 @@
 import { initFishSchool, animateFishSchool } from './fish.js';
+import { initSubmarine, animateSubmarine } from './submarine.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.module.js';
 
+const clock = new THREE.Clock();
 
 let scene, camera, renderer, planes = [], videoPlane;
-let fishSchoolPlane;
+let fishSchoolPlane, submarinePlane;
 let currentIndex = 0;
 const textures = [
     'textures/who2.png',
@@ -32,6 +35,38 @@ let audioSources = [
     'media/audio/ambience_5.mp3'
 ];
 
+function checkMaterials() {
+    scene.traverse((object) => {
+        if (object.isMesh) {
+            const material = object.material;
+    
+            if (material.map) console.log(`${object.name || 'Unnamed object'} has a diffuse map`);
+            if (material.normalMap && object.geometry) {
+                const geometry = object.geometry;
+    
+                // Ensure geometry has necessary attributes before computing tangents
+                if (geometry.attributes.normal && geometry.attributes.uv) {
+                    if (!geometry.attributes.tangent) {
+                        console.log(`${object.name || 'Unnamed object'} is missing tangents, computing them now`);
+                        try {
+                            geometry.computeTangents();
+                            console.log('Tangents computed successfully for', object.name || 'Unnamed object');
+                        } catch (e) {
+                            console.error('Failed to compute tangents for', object.name || 'Unnamed object', e);
+                        }
+                    }
+                } else {
+                    console.warn(`Skipping tangent computation for ${object.name || 'Unnamed object'}: Missing normal or UV attributes.`);
+                }
+            }
+        } else {
+            console.log(`Object skipped, type is: ${object.type}`);
+        }
+    });    
+}
+
+
+
 // initialize webgl and three.js ----------------------------------------------------------------------------------------
 function init() {
     scene = new THREE.Scene();
@@ -57,6 +92,10 @@ function init() {
 
     console.log('Video plane added at position:', videoPlane.position);
 
+    checkMaterials();
+
+    
+
     // Set up image planes
     textures.forEach((texture, index) => {
         const geometry = new THREE.PlaneGeometry(16, 9);
@@ -78,6 +117,12 @@ function init() {
             console.log('Fish school plane set:', fishSchoolPlane);
             initFishSchool(fishSchoolPlane);
             console.log('Fish school initialized on plane:', fishSchoolPlane);
+        }
+        if (index === 3) { // This is plane 4 (index 3)
+            submarinePlane = plane;
+            console.log('Submarine plane set:', submarinePlane);
+            initSubmarine(submarinePlane);
+            console.log('Submarine initialized on plane:', submarinePlane);
         }
     });
     // if (fishSchoolPlane) {
@@ -104,17 +149,19 @@ function init() {
 
 // Audio code -----------------------------------------------------------------------------------------------------------
 function initAudio() {
-    audioSources.forEach((src, index) => {
-        const audio = new Audio(src);
-        audio.loop = true;
-        audio.volume = 0;
-        audioElements.push(audio);
-        console.log(`Audio ${index} initialized:`, src);
+    document.getElementById('startButton').addEventListener('click', () => {
+        audioSources.forEach((src, index) => {
+            const audio = new Audio(src);
+            audio.loop = true;
+            audio.volume = 0;
+            audioElements.push(audio);
+            console.log(`Audio ${index} initialized:`, src);
+        });
+        currentAudio = audioElements[0];
+        currentAudio.volume = 0.45;
+        currentAudio.play();
+        console.log('Initial audio started:', audioSources[0]);
     });
-    currentAudio = audioElements[0];
-    currentAudio.volume = 0.45;
-    currentAudio.play();
-    console.log('Initial audio started:', audioSources[0]);
 }
 
 function updateAudio() {
@@ -246,15 +293,14 @@ function lerp(start, end, t) {
 }
 
 function animate(time) {
+    const deltaTime = clock.getDelta();
     requestAnimationFrame(animate);
     updatePositions();
-    // if (fishSchoolPlane && fishSchoolPlane.children.length > 0) {
-    //     animateFishSchool(time);
-    // } else {
-    //     console.log('Fish school not ready for animation');
-    // }
-    if (planes[1]) {
+    if (planes[1] && planes[1].children.length > 0) {
         animateFishSchool(time);
+    }
+    if (planes[3] && planes[3].children.length > 0) {
+        animateSubmarine();
     }
     renderer.render(scene, camera);
 }
