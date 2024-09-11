@@ -5,6 +5,7 @@ But I was not alone in this project, below are the people who helped me in desig
 - Ira Nathan
 - Evy larmit
 - Remco van Adrichem
+- Jeffrey Arts
 
 This website has been made with multiple techniques, including:
 - The Javascript library three.js
