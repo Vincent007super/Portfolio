@@ -1,3 +1,4 @@
+import * as THREE from '../../node_modules/three/build/three.module.js';
 let fishGroup, fishGeometry, fishMaterial, fishTexture;
 const numFish = 150;
 const swimSpeed = 0.05;

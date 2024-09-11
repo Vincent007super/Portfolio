@@ -1,7 +1,6 @@
+import * as THREE from '../../node_modules/three/build/three.module.js';
 import { initFishSchool, animateFishSchool } from './fish.js';
 import { initSubmarine, animateSubmarine } from './submarine.js';
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.module.js';
-
 const clock = new THREE.Clock();
 
 let scene, camera, renderer, planes = [], videoPlane;
