@@ -1,5 +1,5 @@
 import * as THREE from '../../node_modules/three/build/three.module.js';
-import { GLTFLoader } from '../../node_modules/';
+import { GLTFLoader } from './GLTFLoader.js';
 
 let submarineModel;
 
