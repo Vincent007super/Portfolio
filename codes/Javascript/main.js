@@ -1,18 +1,19 @@
 import * as THREE from '../../node_modules/three/build/three.module.js';
 import { initFishSchool, animateFishSchool } from './fish.js';
 import { initSubmarine, animateSubmarine } from './submarine.js';
+import {numberPlanes} from '../../php_files/data_load.php'
 const clock = new THREE.Clock();
 
 let scene, camera, renderer, planes = [], videoPlane;
 let fishSchoolPlane, submarinePlane;
 let currentIndex = 0;
-const textures = [
-    'textures/who2.png',
-    'textures/who2.png',
-    'textures/who2.png',
-    'textures/who2.png',
-    'textures/who2.png'
-];
+// const textures = [
+//     'textures/who2.png',
+//     'textures/who2.png',
+//     'textures/who2.png',
+//     'textures/who2.png',
+//     'textures/who2.png'
+// ];
 const totalElements = textures.length;
 let delta = 150;
 let canScroll = true;
@@ -96,7 +97,7 @@ function init() {
     
 
     // Set up image planes
-    textures.forEach((texture, index) => {
+    planes.forEach((texture, index) => {
         const geometry = new THREE.PlaneGeometry(16, 9);
         const material = new THREE.MeshBasicMaterial({
             map: new THREE.TextureLoader().load(texture),
