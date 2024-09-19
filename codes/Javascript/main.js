@@ -6,14 +6,7 @@ const clock = new THREE.Clock();
 let scene, camera, renderer, planes = [], videoPlane;
 let fishSchoolPlane, submarinePlane;
 let currentIndex = 0;
-const textures = [
-    'textures/who2.png',
-    'textures/who2.png',
-    'textures/who2.png',
-    'textures/who2.png',
-    'textures/who2.png'
-];
-const totalElements = textures.length;
+const planesAmount = 5;
 let delta = 150;
 let canScroll = true;
 const speed = 0.009;
@@ -21,10 +14,9 @@ let startZ = 150;
 
 let audioElements = [];
 let currentAudio = null;
-let nextAudio = null;
+// let nextAudio = null;
 
-console.log('Total Elements:', totalElements);
-console.log('Textures:', textures);
+console.log('amount of planes:', planesAmount);
 
 let audioSources = [
     'media/audio/ambience_top.mp3',
@@ -93,23 +85,27 @@ function init() {
 
     checkMaterials();
 
+    for (let i = 0; i < planesAmount; i++) {
+        planeLoad(i);
+    }
     
 
     // Set up image planes
-    textures.forEach((texture, index) => {
+    function planeLoad(index) {
         const geometry = new THREE.PlaneGeometry(16, 9);
         const material = new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load(texture),
+            color: new THREE.Color(0x44d1ef), // Lichtblauw in hexadecimaal
             side: THREE.DoubleSide,
-            transparent: true
+            transparent: true,
+            opacity: 0.4 // 40% doorzichtigheid
         });
         const plane = new THREE.Mesh(geometry, material);
-        plane.position.set(0, 0, -50 + (index - 1) * -delta);
+        plane.position.set(0, 0, -50 + index * -delta);
         plane.scale.set(3, 3, 1);
         scene.add(plane);
         planes.push(plane);
         console.log(`Plane ${index} added at position:`, plane.position);
-
+    
         // Initialize fish school for the second plane
         if (index === 1) {
             fishSchoolPlane = plane;
@@ -123,7 +119,7 @@ function init() {
             initSubmarine(submarinePlane);
             console.log('Submarine initialized on plane:', submarinePlane);
         }
-    });
+    }
     // if (fishSchoolPlane) {
     //     initFishSchool(fishSchoolPlane);
     //     console.log('Fish school initialized on plane:', fishSchoolPlane);
@@ -255,7 +251,7 @@ function onWheelScroll(event) {
     if (!canScroll) return;
 
     const scrollDirection = Math.sign(event.deltaY);
-    const newIndex = Math.max(0, Math.min(currentIndex + scrollDirection, totalElements - 1));
+    const newIndex = Math.max(0, Math.min(currentIndex + scrollDirection, planesAmount - 1));
 
     if (newIndex !== currentIndex) {
         currentIndex = newIndex;
@@ -273,7 +269,7 @@ function onWheelScroll(event) {
 function setupProgressBar() {
     const progressPointsContainer = document.querySelector('.progress-points');
     progressPointsContainer.innerHTML = '';
-    for (let i = 0; i < totalElements; i++) {
+    for (let i = 0; i < planesAmount; i++) {
         const point = document.createElement('div');
         point.classList.add('progress-point');
         progressPointsContainer.appendChild(point);
@@ -311,7 +307,7 @@ function onWindowResize() {
 }
 
 function updateBackground() {
-    const progress = currentIndex / (totalElements - 1);
+    const progress = currentIndex / (planesAmount - 1);
     const startColor = { r: 33, g: 173, b: 218 };
     const endColor = { r: 20, g: 17, b: 40 };
     const currentColor = {
