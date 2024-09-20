@@ -100,7 +100,7 @@ function init() {
             opacity: 0.4 // 40% doorzichtigheid
         });
         const plane = new THREE.Mesh(geometry, material);
-        plane.position.set(0, 0, -50 + index * -delta);
+        plane.position.set(0, 0, -50 + (index - 1) * -delta);
         plane.scale.set(3, 3, 1);
         scene.add(plane);
         planes.push(plane);
@@ -222,7 +222,7 @@ function updatePlaneOpacities() {
     const planeDistance = 50; // Distance at which planes start to fade
     [videoPlane, ...planes].forEach((plane, index) => {
         const distance = Math.abs(camera.position.z - plane.position.z);
-        const opacity = Math.max(0, Math.min(1, 1 - (distance - planeDistance) / 100));
+        const opacity = Math.max(0, Math.min(0.9, 0.9 - (Math.abs(planeDistance - distance) / 100)));
         plane.material.opacity = opacity;
 
         // Pas de zichtbaarheid van de vissengroep aan
