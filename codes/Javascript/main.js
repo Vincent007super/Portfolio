@@ -1,6 +1,6 @@
 import * as THREE from '../../node_modules/three/build/three.module.js';
 import { initFishSchool, animateFishSchool } from './fish.js';
-import { initSubmarine, animateSubmarine } from './submarine.js';
+import { initSubmarine, animateSubmarine, updateSubmarineOpacity } from './submarine.js';
 const clock = new THREE.Clock();
 
 let scene, camera, renderer, planes = [], videoPlane;
@@ -116,7 +116,8 @@ function init() {
         if (index === 3) { // This is plane 4 (index 3)
             submarinePlane = plane;
             console.log('Submarine plane set:', submarinePlane);
-            initSubmarine(submarinePlane);
+            const scene = new THREE.Scene();
+            initSubmarine(submarinePlane, scene);
             console.log('Submarine initialized on plane:', submarinePlane);
         }
     }
@@ -236,10 +237,11 @@ function updatePositions() {
     const targetZ = startZ - (currentIndex * delta);
     camera.position.z = lerp(camera.position.z, targetZ, speed);
 
-
-    // Add this line to update plane opacities
+    // Check if we are on the submarine's plane
+    const isOnSubmarinePlane = (currentIndex === 3); // Assuming plane 3 holds the submarine
+    animateSubmarine(isOnSubmarinePlane);
+    
     updatePlaneOpacities();
-
     updateProgressBar();
     updateBackground();
 }
@@ -257,6 +259,7 @@ function onWheelScroll(event) {
         currentIndex = newIndex;
         console.log('New Current Index:', currentIndex);
         updateAudio();
+        updateSubmarineOpacity(currentIndex);
     }
 
     canScroll = false;
