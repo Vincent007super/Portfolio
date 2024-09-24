@@ -7,6 +7,37 @@ let scene, camera, renderer, planes = [], videoPlane;
 let fishSchoolPlane, submarinePlane;
 let currentIndex = 0;
 const planesAmount = 5;
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const planeElements = [
+    // Plane 2
+    [
+
+    ],
+    [
+        { type: 'title', text: 'Plane 1 a', link: '', position: { x: -2, y: 1, z: 2 } },
+        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
+        { type: 'button', text: 'Meer info', link: 'page2.html', position: { x: 2, y: -1, z: 2 } }
+    ],
+    // Plane 3
+    [
+        { type: 'title', text: 'Plane 2 Titel', link: '', position: { x: -2, y: 1, z: 2 } },
+        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
+        { type: 'button', text: 'Meer info', link: 'page3.html', position: { x: 2, y: -1, z: 2 } }
+    ],
+    [
+        { type: 'title', text: 'Plane 3 Titel', link: '', position: { x: -2, y: 1, z: 2 } },
+        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
+        { type: 'button', text: 'Meer info', link: 'page2.html', position: { x: 2, y: -1, z: 2 } }
+    ],
+    // Plane 3
+    [
+        { type: 'title', text: 'Plane 4 Titel', link: '', position: { x: -2, y: 1, z: 2 } },
+        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
+        { type: 'button', text: 'Meer info', link: 'page3.html', position: { x: 2, y: -1, z: 2 } }
+    ]
+];
+
 let delta = 150;
 let canScroll = true;
 const speed = 0.009;
@@ -30,11 +61,11 @@ function checkMaterials() {
     scene.traverse((object) => {
         if (object.isMesh) {
             const material = object.material;
-    
+
             if (material.map) console.log(`${object.name || 'Unnamed object'} has a diffuse map`);
             if (material.normalMap && object.geometry) {
                 const geometry = object.geometry;
-    
+
                 // Ensure geometry has necessary attributes before computing tangents
                 if (geometry.attributes.normal && geometry.attributes.uv) {
                     if (!geometry.attributes.tangent) {
@@ -53,7 +84,7 @@ function checkMaterials() {
         } else {
             console.log(`Object skipped, type is: ${object.type}`);
         }
-    });    
+    });
 }
 
 
@@ -88,7 +119,7 @@ function init() {
     for (let i = 0; i < planesAmount; i++) {
         planeLoad(i);
     }
-    
+
 
     // Set up image planes
     function planeLoad(index) {
@@ -105,7 +136,7 @@ function init() {
         scene.add(plane);
         planes.push(plane);
         console.log(`Plane ${index} added at position:`, plane.position);
-    
+
         // Initialize fish school for the second plane
         if (index === 1) {
             fishSchoolPlane = plane;
@@ -121,6 +152,57 @@ function init() {
             console.log('Submarine initialized on plane:', submarinePlane);
         }
     }
+
+    function addElementsToPlane(plane, elements) {
+        elements.forEach((element) => {
+            let mesh;
+    
+            // Voeg tekst toe aan het plane als een CanvasTexture
+            if (element.type === 'title' || element.type === 'button') {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                context.font = 'Bold 60px Arial';
+                context.fillStyle = 'white';
+                context.fillText(element.text, 0, 50);
+                const texture = new THREE.CanvasTexture(canvas);
+                const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+                const geometry = new THREE.PlaneGeometry(4, 2);
+                mesh = new THREE.Mesh(geometry, material);
+            }
+    
+            // Voeg een afbeelding toe aan het plane
+            if (element.type === 'image') {
+                const textureLoader = new THREE.TextureLoader();
+                const texture = textureLoader.load(element.src);
+                const material = new THREE.MeshBasicMaterial({ map: texture });
+                const geometry = new THREE.PlaneGeometry(4, 2);
+                mesh = new THREE.Mesh(geometry, material);
+            }
+    
+            // Stel de positie in
+            const { x, y, z } = element.position;
+            mesh.position.set(x, y, z);
+    
+            // Voeg de klikfunctie toe voor knoppen en afbeeldingen
+            if (element.link) {
+                mesh.userData = { link: element.link };
+                mesh.callback = function () {
+                    window.location.href = mesh.userData.link;
+                };
+            }
+    
+            // Voeg de mesh toe aan de plane
+            plane.add(mesh);
+        });
+    }
+    
+    // Voeg elementen toe aan elk plane
+    planeElements.forEach((elements, index) => {
+        addElementsToPlane(planes[index], elements);
+    });
+
+    // Add elements to each plane
+
     // if (fishSchoolPlane) {
     //     initFishSchool(fishSchoolPlane);
     //     console.log('Fish school initialized on plane:', fishSchoolPlane);
@@ -138,27 +220,46 @@ function init() {
     console.log('Initial camera position:', camera.position);
 
     setupProgressBar();
+    // addElementsToPlane(plane, element);
 
     window.addEventListener('resize', onWindowResize);
     window.addEventListener('wheel', onWheelScroll, { passive: false });
 }
 
+function onDocumentMouseClick(event) {
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
+    if (intersects.length > 0) {
+        const object = intersects[0].object;
+        if (object.callback) object.callback();
+    }
+}
+
+window.addEventListener('click', onDocumentMouseClick);
+
 // Audio code -----------------------------------------------------------------------------------------------------------
 function initAudio() {
+    canScroll = false;
     document.getElementById('startButton').addEventListener('click', () => {
+        document.getElementById('audio-overlay').style.display = 'none'; // Verberg de overlay na klikken
+        canScroll = true;
+
         audioSources.forEach((src, index) => {
             const audio = new Audio(src);
             audio.loop = true;
             audio.volume = 0;
             audioElements.push(audio);
-            console.log(`Audio ${index} initialized:`, src);
         });
         currentAudio = audioElements[0];
         currentAudio.volume = 0.45;
         currentAudio.play();
-        console.log('Initial audio started:', audioSources[0]);
     });
 }
+
 
 function updateAudio() {
     const nextIndex = Math.min(currentIndex, audioElements.length - 1);
@@ -240,7 +341,7 @@ function updatePositions() {
     // Check if we are on the submarine's plane
     const isOnSubmarinePlane = (currentIndex === 3); // Assuming plane 3 holds the submarine
     animateSubmarine(isOnSubmarinePlane);
-    
+
     updatePlaneOpacities();
     updateProgressBar();
     updateBackground();

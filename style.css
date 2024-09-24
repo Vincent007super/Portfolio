@@ -8,6 +8,37 @@ canvas {
     height: 100vh !important;
 }
 
+#audio-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8); /* Donkere overlay */
+    z-index: 10;
+  }
+  
+  body.noscroll {
+    overflow: hidden;
+  }
+  
+.plane-element {
+    position: absolute;
+    transition: transform 0.3s ease, scale 0.3s ease;
+}
+
+.plane-element:hover {
+    transform: scale(1.1); /* Vergroot */
+}
+
+.plane-element.clickable:hover {
+    cursor: pointer;
+}
+
+
 #wrapper1 {
     display: flex;
     position: fixed;
