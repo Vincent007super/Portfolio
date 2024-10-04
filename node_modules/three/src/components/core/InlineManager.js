@@ -13,8 +13,8 @@ in order to create a line break when necessary. It's Text that merge the various
 in its own updateLayout function.
 
  */
-import * as Whitespace from '../../utils/inline-layout/Whitespace';
-import * as TextAlign from '../../utils/inline-layout/TextAlign';
+import * as Whitespace from '../../utils/inline-layout/Whitespace.js';
+import * as TextAlign from '../../utils/inline-layout/TextAlign.js';
 
 export default function InlineManager( Base ) {
 
