@@ -1,7 +1,7 @@
 import {
 	BufferGeometry,
 	Float32BufferAttribute
-} from 'three';
+} from '../../../src/Three.js';
 
 class BoxLineGeometry extends BufferGeometry {
 
