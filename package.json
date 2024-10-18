@@ -11,9 +11,9 @@
     "rollup": "^4.21.2",
     "source-map-js": "^1.2.1",
     "three": "^0.168.0",
+    "troika-three-text": "^0.50.1",
     "vite": "^5.4.3"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
