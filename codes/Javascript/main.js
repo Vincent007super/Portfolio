@@ -1,6 +1,8 @@
 import * as THREE from '../../node_modules/three/build/three.module.js';
 import { initFishSchool, animateFishSchool } from './fish.js';
 import { initSubmarine, animateSubmarine, updateSubmarineOpacity } from './submarine.js';
+// import {Text} from '../../node_modules/troika-three-text/src/index.js';
+
 const clock = new THREE.Clock();
 
 let scene, camera, renderer, planes = [], videoPlane;
@@ -9,34 +11,6 @@ let currentIndex = 0;
 const planesAmount = 5;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-const planeElements = [
-    // Plane 2
-    [
-
-    ],
-    [
-        { type: 'title', text: 'Plane 1 a', link: '', position: { x: -2, y: 1, z: 2 } },
-        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
-        { type: 'button', text: 'Meer info', link: 'page2.html', position: { x: 2, y: -1, z: 2 } }
-    ],
-    // Plane 3
-    [
-        { type: 'title', text: 'Plane 2 Titel', link: '', position: { x: -2, y: 1, z: 2 } },
-        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
-        { type: 'button', text: 'Meer info', link: 'page3.html', position: { x: 2, y: -1, z: 2 } }
-    ],
-    [
-        { type: 'title', text: 'Plane 3 Titel', link: '', position: { x: -2, y: 1, z: 2 } },
-        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
-        { type: 'button', text: 'Meer info', link: 'page2.html', position: { x: 2, y: -1, z: 2 } }
-    ],
-    // Plane 3
-    [
-        { type: 'title', text: 'Plane 4 Titel', link: '', position: { x: -2, y: 1, z: 2 } },
-        { type: 'image', src: 'path/to/image.jpg', link: '', position: { x: 0, y: 0, z: 2 } },
-        { type: 'button', text: 'Meer info', link: 'page3.html', position: { x: 2, y: -1, z: 2 } }
-    ]
-];
 
 let delta = 150;
 let canScroll = true;
@@ -153,53 +127,54 @@ function init() {
         }
     }
 
-    function addElementsToPlane(plane, elements) {
-        elements.forEach((element) => {
-            let mesh;
+    // function addElementsToPlane(plane, elements) {
+    //     elements.forEach((element) => {
+    //         let mesh;
     
-            // Voeg tekst toe aan het plane als een CanvasTexture
-            if (element.type === 'title' || element.type === 'button') {
-                const canvas = document.createElement('canvas');
-                const context = canvas.getContext('2d');
-                context.font = 'Bold 60px Arial';
-                context.fillStyle = 'white';
-                context.fillText(element.text, 0, 50);
-                const texture = new THREE.CanvasTexture(canvas);
-                const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
-                const geometry = new THREE.PlaneGeometry(4, 2);
-                mesh = new THREE.Mesh(geometry, material);
-            }
+    //         // Voeg tekst toe aan het plane als een CanvasTexture
+    //         if (element.type === 'title' || element.type === 'button') {
+    //             const canvas = document.createElement('canvas');
+    //             const context = canvas.getContext('2d');
+    //             context.innerWidth = 2000;
+    //             context.font = 'Bold 60px Arial';
+    //             context.fillStyle = 'white';
+    //             context.fillText(element.text, 0, 50, 2000);
+    //             const texture = new THREE.CanvasTexture(canvas);
+    //             const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+    //             const geometry = new THREE.PlaneGeometry(4, 2);
+    //             mesh = new THREE.Mesh(geometry, material);
+    //         }
     
-            // Voeg een afbeelding toe aan het plane
-            if (element.type === 'image') {
-                const textureLoader = new THREE.TextureLoader();
-                const texture = textureLoader.load(element.src);
-                const material = new THREE.MeshBasicMaterial({ map: texture });
-                const geometry = new THREE.PlaneGeometry(4, 2);
-                mesh = new THREE.Mesh(geometry, material);
-            }
+    //         // Voeg een afbeelding toe aan het plane
+    //         if (element.type === 'image') {
+    //             const textureLoader = new THREE.TextureLoader();
+    //             const texture = textureLoader.load(element.src);
+    //             const material = new THREE.MeshBasicMaterial({ map: texture });
+    //             const geometry = new THREE.PlaneGeometry(4, 2);
+    //             mesh = new THREE.Mesh(geometry, material);
+    //         }
     
-            // Stel de positie in
-            const { x, y, z } = element.position;
-            mesh.position.set(x, y, z);
+    //         // Stel de positie in
+    //         const { x, y, z } = element.position;
+    //         mesh.position.set(x, y, z);
     
-            // Voeg de klikfunctie toe voor knoppen en afbeeldingen
-            if (element.link) {
-                mesh.userData = { link: element.link };
-                mesh.callback = function () {
-                    window.location.href = mesh.userData.link;
-                };
-            }
+    //         // Voeg de klikfunctie toe voor knoppen en afbeeldingen
+    //         if (element.link) {
+    //             mesh.userData = { link: element.link };
+    //             mesh.callback = function () {
+    //                 window.location.href = mesh.userData.link;
+    //             };
+    //         }
     
-            // Voeg de mesh toe aan de plane
-            plane.add(mesh);
-        });
-    }
+    //         // Voeg de mesh toe aan de plane
+    //         plane.add(mesh);
+    //     });
+    // }
     
-    // Voeg elementen toe aan elk plane
-    planeElements.forEach((elements, index) => {
-        addElementsToPlane(planes[index], elements);
-    });
+    // // Voeg elementen toe aan elk plane
+    // planeElements.forEach((elements, index) => {
+    //     addElementsToPlane(planes[index], elements);
+    // });
 
     // Add elements to each plane
 
