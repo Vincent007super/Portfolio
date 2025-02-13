@@ -43,18 +43,48 @@ let camPosZ; // Z position variable of the camera
 let currCam = 1; // Where the Camera currently is
 // Initialize Three.js
 
+function checkScreenSize() {
+    if (window.innerWidth < 1750) {
+        document.body.innerHTML = `
+            <div id="screen-warning" style="
+                position: fixed;
+                top: 0; left: 0; width: 100%; height: 100%;
+                background: gray;
+                color: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 24px;
+                text-align: center;
+                z-index: 9999;
+            ">
+                <p>Vergroot je browser of zet hem op volledig scherm om deze site te bekijken.</p>
+            </div>
+        `;
+    } else {
+        let warning = document.getElementById('screen-warning');
+        if (warning) warning.remove();
+    }
+}
+
 // Set initial camera position
 function camPosCalc() {
 
     if (window.innerWidth < 1000) {
         camPosZ = 15;
         console.log("Kleiner dan 1000, camPosZ is nu " + camPosZ);
-    } else if (window.innerWidth >= 1000 && window.innerWidth < 1920) {
-        camPosZ = 10;
-        console.log("Groter dan 1000 en kleiner dan 1920, camPosZ is nu " + camPosZ);
-    } else if (window.innerWidth == 1920 || window.innerWidth > 1920) {
-        camPosZ = 5;
-        console.log("Groter dan 1920, camPosZ is nu " + camPosZ);
+    } else if (window.innerWidth >= 1000 && window.innerWidth < 1500) {
+        camPosZ = 11;
+        console.log("Groter dan 1000 en kleiner dan 1500, camPosZ is nu " + camPosZ);
+    } else if (window.innerWidth >= 1500 && window.innerWidth < 1920) { 
+        camPosZ = 9;
+        console.log("Groter dan 1500 en kleiner dan 1920, camPosZ is nu " + camPosZ);
+    }else if (window.innerWidth == 1920) {
+        camPosZ = 8;
+        console.log("Zo groot als 1920, camPosZ is nu " + camPosZ);
+    } else if (window.innerWidth > 1920) {
+        camPosZ = 7;
+        console.log("Groter dan 1920, camPosZ is nu: " + camPosZ)
     } else {
         console.error(camera.position.z + " Something went wrong. Your screen width of " + window.innerWidth + " Does not work properly with our site, please make your browser smaller or larger.");
     }
@@ -78,7 +108,9 @@ function init() {
         objects.push(plane);
     });
 
-    window.addEventListener('resize', onWindowResize);
+    window.addEventListener('resize', checkScreenSize);
+    checkScreenSize(); // Direct checken bij laden
+
     window.addEventListener('wheel', onScroll);
 
     console.log('Scene initialized');
