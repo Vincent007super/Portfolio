@@ -120,7 +120,7 @@ function createTextPlane(content) {
 
     // Layout-specifiek ontwerp toepassen
     if (content.layout === "basic") {
-        context.fillStyle = 'white';
+        context.fillStyle = 'black';
         context.font = '64px Arial';
         context.textAlign = 'center';
         context.textBaseline = 'top';
@@ -130,7 +130,7 @@ function createTextPlane(content) {
         wrapText(context, content.description, canvas.width / 2, canvas.height / 2, 1200, 40);
     } else if (content.layout === "detailed") {
         // Gedetailleerde layout: Titel, beschrijving, afbeelding en extra informatie
-        context.fillStyle = 'white';
+        context.fillStyle = 'black';
         context.font = '64px Arial';
         context.textAlign = 'left';
         context.textBaseline = 'top';
