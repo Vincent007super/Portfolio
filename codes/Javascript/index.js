@@ -1,37 +1,37 @@
-import * as THREE from '../../node_modules/three/src/Three.js';
-import { gsap } from '../../node_modules/gsap/all.js';
+import * as THREE from 'three';
 
 let scene, camera, renderer;
 let objects = []; // Array to hold our scrollable objects
 let planesContent = [
     {
         plane: 1,
-        layout: "basic", // Layout type
+        layout: "title", // Layout type
         title: "Hello world",
-        description: "Welcome to my website :D",
+        description: "Welcome to my portfolio. Interested? Scroll down to dive in!",
         image: "example1.png"
     },
     {
         plane: 2,
         layout: "detailed", // Layout type
-        title: "American declaration on the empire of Japan",
-        description: "Japan has, therefore, undertaken a surprise offensive extending throughout the Pacific area. The facts of yesterday and today speak for themselves. The people of the United States have already formed their opinions and well understand the implications to the very life and safety of our Nation. As Commander in Chief of the Army and Navy I have directed that all measures be taken for our defense. But always will our whole Nation remember the character of the onslaught against us. No matter how long it may take us to overcome this premeditated invasion, the American people in their righteous might will win through to absolute victory.",
-        image: "../../media/img/FDR.jpg",
-        extraInfo: "~ Franklin D. Rooseveld"
+        title: "Outgoing and a fast learner",
+        description: "A true history fanatic, Vincent loves to travel across countries to visit places where once was fought and explore the machinery with which they engaged in combat. But of course, one must not merely see history if not learn from it. Vincent tries to stuff as much information as possible out of those short trips to take back home. And once home he is always ready for the next trip.",
+        image1: "../../media/img/London.jpg",
+        image2: "../../media/img/Italy.jpg",
+        extraInfo: "Click here to learn more about me"
     },
     {
         plane: 3,
-        layout: "multipleImages", // Nieuwe lay-out met meerdere afbeeldingen
+        layout: "title", // Nieuwe lay-out met meerdere afbeeldingen
         title: "A Collection of Images",
         description: "Here are some images for you.",
-        images: ["image1.jpg", "image2.jpg", "image3.jpg"] // Meerdere afbeeldingen
     },
     {
         plane: 4,
-        layout: "video", // Nieuwe lay-out voor video
-        title: "Watch This Video",
-        description: "A fascinating video about history.",
-        videoUrl: "video.mp4" // Video URL of pad naar lokaal bestand
+        layout: "detailed", // Layout type
+        title: "Dit zijn een aantal projecten waaran ik heb gewerkt",
+        description: "meer ga je niet krijgen :D.",
+        image: "../../media/img/FDR.jpg",
+        extraInfo: "Klik hier om meer te zien"
     }
 ];
 
@@ -43,29 +43,29 @@ let camPosZ; // Z position variable of the camera
 let currCam = 1; // Where the Camera currently is
 // Initialize Three.js
 
-function checkScreenSize() {
-    if (window.innerWidth < 1750) {
-        document.body.innerHTML = `
-            <div id="screen-warning" style="
-                position: fixed;
-                top: 0; left: 0; width: 100%; height: 100%;
-                background: gray;
-                color: white;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                font-size: 24px;
-                text-align: center;
-                z-index: 9999;
-            ">
-                <p>Vergroot je browser of zet hem op volledig scherm om deze site te bekijken.</p>
-            </div>
-        `;
-    } else {
-        let warning = document.getElementById('screen-warning');
-        if (warning) warning.remove();
-    }
-}
+// function checkScreenSize() {
+//     if (window.innerWidth < 1750) {
+//         document.body.innerHTML = 
+//             <div id="screen-warning" style="
+//                 position: fixed;
+//                 top: 0; left: 0; width: 100%; height: 100%;
+//                 background: gray;
+//                 color: white;
+//                 display: flex;
+//                 justify-content: center;
+//                 align-items: center;
+//                 font-size: 24px;
+//                 text-align: center;
+//                 z-index: 9999;
+//             ">
+//                 <p>Vergroot je browser of zet hem op volledig scherm om deze site te bekijken.</p>
+//             </div>
+//         ;
+//     } else {
+//         let warning = document.getElementById('screen-warning');
+//         if (warning) warning.remove();
+//     }
+// }
 
 // Set initial camera position
 function camPosCalc() {
@@ -76,10 +76,10 @@ function camPosCalc() {
     } else if (window.innerWidth >= 1000 && window.innerWidth < 1500) {
         camPosZ = 11;
         console.log("Groter dan 1000 en kleiner dan 1500, camPosZ is nu " + camPosZ);
-    } else if (window.innerWidth >= 1500 && window.innerWidth < 1920) { 
+    } else if (window.innerWidth >= 1500 && window.innerWidth < 1920) {
         camPosZ = 9;
         console.log("Groter dan 1500 en kleiner dan 1920, camPosZ is nu " + camPosZ);
-    }else if (window.innerWidth == 1920) {
+    } else if (window.innerWidth == 1920) {
         camPosZ = 8;
         console.log("Zo groot als 1920, camPosZ is nu " + camPosZ);
     } else if (window.innerWidth > 1920) {
@@ -92,12 +92,27 @@ function camPosCalc() {
 }
 
 function init() {
-    scene = new THREE.Scene();
+    scene = new THREE.Scene({});
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     camera.position.y = 0;
+
+    const overlayTexture = new THREE.TextureLoader().load('media/img/overlay.png');
+    const overlay = new THREE.Mesh(
+        new THREE.PlaneGeometry(60, 65),
+        new THREE.MeshBasicMaterial({ map: overlayTexture, transparent: true })
+    );
+    const bgTexture = new THREE.TextureLoader().load('media/img/background.png');
+    const backgroundPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(80, 100), // Large enough to cover the scene
+        new THREE.MeshBasicMaterial({ map: bgTexture, transparent: true })
+    );
+    backgroundPlane.position.set(0, -20, -1); // Place it behind everything
+    scene.add(backgroundPlane);
+    overlay.position.set(0, -30, 2.5);
+    scene.add(overlay);
 
     camPosCalc();
     // Add planes with content from planesContent array
@@ -108,8 +123,7 @@ function init() {
         objects.push(plane);
     });
 
-    window.addEventListener('resize', checkScreenSize);
-    checkScreenSize(); // Direct checken bij laden
+    window.addEventListener('resize', onWindowResize);
 
     window.addEventListener('wheel', onScroll);
 
@@ -122,8 +136,8 @@ function createTextPlane(content) {
     const context = canvas.getContext('2d');
 
     const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
-    const geometry = new THREE.PlaneGeometry(16, 9);
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, color: 0xffffff, opacity: 0.5 });
+    const geometry = new THREE.PlaneGeometry(16, 9, 10, 10);
     const textPlane = new THREE.Mesh(geometry, material);
 
     canvas.width = window.innerWidth;
@@ -151,7 +165,7 @@ function createTextPlane(content) {
     }
 
     // Layout-specifiek ontwerp toepassen
-    if (content.layout === "basic") {
+    if (content.layout === "title") {
         context.fillStyle = 'black';
         context.font = '64px Arial';
         context.textAlign = 'center';
@@ -161,21 +175,26 @@ function createTextPlane(content) {
         context.font = '32px Arial';
         wrapText(context, content.description, canvas.width / 2, canvas.height / 2, 1200, 40);
     } else if (content.layout === "detailed") {
-        // Gedetailleerde layout: Titel, beschrijving, afbeelding en extra informatie
+        if (content.image1) {
+            const imagePlane1 = createImagePlane(content.image1, 4, 4.5);
+            imagePlane1.position.set(-3.5, -2.5, 0.1); // Pas de positie aan
+            textPlane.add(imagePlane1);
+        }
+        if (content.image2) {
+            const imagePlane2 = createImagePlane(content.image2, 4, 4.5);
+            imagePlane2.position.set(3.5, - 2.5, 0.1); // Pas de positie aan
+            textPlane.add(imagePlane2);
+        }
         context.fillStyle = 'black';
-        context.font = '64px Arial';
-        context.textAlign = 'left';
+        context.font = '48px Arial';
+        context.textAlign = 'center';
         context.textBaseline = 'top';
-        context.fillText(content.title, 75, 85);
+        context.fillText(content.title, canvas.width / 2, 50);
 
-        // Beschrijving
-        context.font = '32px Arial';
-        wrapText(context, content.description, 75, 180, 1000, 40);
-
-        // Extra informatie
-        wrapText(context, content.extraInfo, 75, canvas.height - 200, 1800, 40);
+        context.font = '28px Arial';
+        wrapText(context, content.description, canvas.width / 2, 150, canvas.width - 1000, 35);
     } else if (content.layout === "multipleImages") {
-        context.fillStyle = 'white';
+        context.fillStyle = 'black';
         context.font = '64px Arial';
         context.textAlign = 'left';
         context.textBaseline = 'top';
@@ -191,7 +210,7 @@ function createTextPlane(content) {
             textPlane.add(imagePlane); // Voeg toe aan de plane
         });
     } else if (content.layout === "video") {
-        context.fillStyle = 'white';
+        context.fillStyle = 'black';
         context.font = '64px Arial';
         context.textAlign = 'left';
         context.textBaseline = 'top';
@@ -239,7 +258,7 @@ function onScroll(scroll) {
             .to(camera.position, { z: camPosZ, duration: 0.5 }) // Move camera forward
             .call(() => { canScroll = true; }); // Re-enable scrolling after animation
 
-        console.log(`Camera moved to plane ${currCam}, new y: ${targetY}`);
+        console.log('Camera moved to plane ' + currCam, 'new y: ' + targetY);
     }
 }
 // Image on plane
