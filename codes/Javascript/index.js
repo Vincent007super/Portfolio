@@ -19,20 +19,20 @@ let planesContent = [
         image2: "../../media/img/Italy.jpg",
         extraInfo: "Click here to learn more about me"
     },
-    {
-        plane: 3,
-        layout: "title", // Nieuwe lay-out met meerdere afbeeldingen
-        title: "A Collection of Images",
-        description: "Here are some images for you.",
-    },
-    {
-        plane: 4,
-        layout: "detailed", // Layout type
-        title: "Dit zijn een aantal projecten waaran ik heb gewerkt",
-        description: "meer ga je niet krijgen :D.",
-        image: "../../media/img/FDR.jpg",
-        extraInfo: "Klik hier om meer te zien"
-    }
+    // {
+    //     plane: 3,
+    //     layout: "title", // Nieuwe lay-out met meerdere afbeeldingen
+    //     title: "A Collection of Images",
+    //     description: "Here are some images for you.",
+    // },
+    // {
+    //     plane: 4,
+    //     layout: "detailed", // Layout type
+    //     title: "Dit zijn een aantal projecten waaran ik heb gewerkt",
+    //     description: "meer ga je niet krijgen :D.",
+    //     image: "../../media/img/FDR.jpg",
+    //     extraInfo: "Klik hier om meer te zien"
+    // }
 ];
 
 // Scroll variables
@@ -95,6 +95,7 @@ function init() {
     scene = new THREE.Scene({});
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     camera.position.y = 0;
@@ -176,12 +177,12 @@ function createTextPlane(content) {
         wrapText(context, content.description, canvas.width / 2, canvas.height / 2, 1200, 40);
     } else if (content.layout === "detailed") {
         if (content.image1) {
-            const imagePlane1 = createImagePlane(content.image1, 4, 4.5);
+            const imagePlane1 = createContrastImagePlane(content.image1, 5, 4.2, 1.5); 
             imagePlane1.position.set(-3.5, -2.5, 0.1); // Pas de positie aan
             textPlane.add(imagePlane1);
         }
         if (content.image2) {
-            const imagePlane2 = createImagePlane(content.image2, 4, 4.5);
+            const imagePlane2 = createContrastImagePlane(content.image2, 6, 4.2, 2);
             imagePlane2.position.set(3.5, - 2.5, 0.1); // Pas de positie aan
             textPlane.add(imagePlane2);
         }
@@ -205,7 +206,7 @@ function createTextPlane(content) {
 
         // Voeg meerdere afbeeldingen toe
         content.images.forEach((image, index) => {
-            const imagePlane = createImagePlane(image, 4, 3); // Afbeelding groot maken
+            const imagePlane = createContrastImagePlane(image, 4, 3); // Afbeelding groot maken
             imagePlane.position.set(75 + (index * 5), 250, 0.1); // Elke afbeelding naar een andere plek verplaatsen
             textPlane.add(imagePlane); // Voeg toe aan de plane
         });
@@ -227,7 +228,7 @@ function createTextPlane(content) {
 
     // Plaats afbeelding als apart object
     if (content.layout === "detailed" && content.image) {
-        const imagePlane = createImagePlane(content.image, 4, 4.5); // Afbeeldingsgrootte aanpassen
+        const imagePlane = createContrastImagePlane(content.image, 4, 4.5); // Afbeeldingsgrootte aanpassen
         imagePlane.position.set(3.5, 0, 0.1); // Positie ten opzichte van de tekst
         textPlane.add(imagePlane); // Voeg afbeelding toe als kind van de tekstplane
     }
@@ -262,16 +263,44 @@ function onScroll(scroll) {
     }
 }
 // Image on plane
-function createImagePlane(imageUrl, width, height) {
+function createContrastImagePlane(imageUrl, width, height, contrast = 1.5) {
     const textureLoader = new THREE.TextureLoader();
     const texture = textureLoader.load(imageUrl);
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.needsUpdate = true;
 
-    const material = new THREE.MeshBasicMaterial({ map: texture });
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            texture1: { value: texture },
+            contrast: { value: contrast }
+        },
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            varying vec2 vUv;
+            uniform sampler2D texture1;
+            uniform float contrast;
+
+            void main() {
+                vec4 color = texture2D(texture1, vUv);
+                color.rgb = ((color.rgb - 0.5) * contrast) + 0.5; // Contrast aanpassen
+                gl_FragColor = color;
+            }
+        `,
+        transparent: true
+    });
+
     const geometry = new THREE.PlaneGeometry(width, height);
-
     const imagePlane = new THREE.Mesh(geometry, material);
     return imagePlane;
 }
+
 // Video on plane
 function createVideoPlane(videoUrl) {
     const video = document.createElement('video');
