@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { TextureLoader, PlaneGeometry, RepeatWrapping } from 'three';
+import { Water } from 'https://unpkg.com/three@0.174.0/examples/jsm/objects/Water.js';
 
 let scene, camera, renderer;
 let objects = []; // Array to hold our scrollable objects
@@ -47,6 +49,7 @@ let newScroll;
 let canScroll = true;
 let camPosZ; // Z position variable of the camera
 let currCam = 1; // Where the Camera currently is
+const waterGeometry = new PlaneGeometry(10000, 10000);
 // Initialize Three.js
 
 // function checkScreenSize() {
@@ -107,21 +110,6 @@ function init() {
     camera.position.y = 0;
     camera.rotatex = 50;
 
-    // const overlayTexture = new THREE.TextureLoader().load('media/img/overlay.png');
-    // const overlay = new THREE.Mesh(
-    //     new THREE.PlaneGeometry(60, 65),
-    //     new THREE.MeshBasicMaterial({ map: overlayTexture, transparent: true })
-    // );
-    // const bgTexture = new THREE.TextureLoader().load('media/img/background.png');
-    // const backgroundPlane = new THREE.Mesh(
-    //     new THREE.PlaneGeometry(80, 100), // Large enough to cover the scene
-    //     new THREE.MeshBasicMaterial({ map: bgTexture, transparent: true })
-    // );
-    // backgroundPlane.position.set(0, -20, -1); // Place it behind everything
-    // scene.add(backgroundPlane);
-    // overlay.position.set(0, -30, 2.5);
-    // scene.add(overlay);
-
     camPosCalc();
     // Add planes with content from planesContent array
     planesContent.forEach((content, index) => {
@@ -138,6 +126,14 @@ function init() {
         objects.push(plane);
         console.log(plane, "added to scene at", planeLocations[index]);
     });
+
+    //add water or smth
+    scene.add(water);
+
+    // Fog handling
+    scene.background = new THREE.Color(0x9FC5E8); // Match fog color for smooth transition
+    // scene.fog = new THREE.Fog(0x073763, 1, 100); // Dark blue fading effect
+
 
     window.addEventListener('resize', onWindowResize);
 
@@ -245,7 +241,27 @@ function createTextPlane(content) {
     return textPlane;
 }
 
+// Create water plane
+const textureLoader = new TextureLoader();
+const normalMap = textureLoader.load('../../media/textures/waternormals.jpg', (texture) => {
+    texture.wrapS = texture.wrapT = RepeatWrapping;
+});
 
+const water = new Water(waterGeometry, {
+    textureWidth: 512,
+    textureHeight: 512,
+    waterNormals: normalMap,
+    alpha: 1.0,
+    sunDirection: new THREE.Vector3(),
+    sunColor: 0xffffff,
+    waterColor: 0x001e0f, // Deep blue-green ocean
+    distortionScale: 3.7,
+    fog: true
+});
+
+water.rotation.x = -Math.PI / 2;
+
+water.position.y = -5;
 
 // Handle scrolling
 function onScroll(scroll) {
@@ -277,26 +293,26 @@ function onScroll(scroll) {
             ease: "power3.inOut",
             duration: 1.5
         })
-        .to(camera.position, {
-            z: targetZ + 3.5,
-            ease: "power3.inOut",
-            duration: 2
-        }, "-=1") // Zorg voor overlap tussen bewegingen
-        .to(camera.rotation, {
-            x: -1,
-            ease: "power3.inOut",
-            duration: 1.5
-        }, "-=1")
-        .to(camera.position, {
-            y: targetY,
-            ease: "power3.inOut",
-            duration: 2
-        }, "-=1.2")
-        .to(camera.rotation, {
-            x: 0,
-            ease: "power3.inOut",
-            duration: 1.5
-        }, "-=1");
+            .to(camera.position, {
+                z: targetZ + 3.5,
+                ease: "power3.inOut",
+                duration: 2
+            }, "-=1") // Zorg voor overlap tussen bewegingen
+            .to(camera.rotation, {
+                x: -1,
+                ease: "power3.inOut",
+                duration: 1.5
+            }, "-=1")
+            .to(camera.position, {
+                y: targetY,
+                ease: "power3.inOut",
+                duration: 2
+            }, "-=1.2")
+            .to(camera.rotation, {
+                x: 0,
+                ease: "power3.inOut",
+                duration: 1.5
+            }, "-=1");
     }
 }
 // Image on plane
@@ -357,6 +373,8 @@ function createVideoPlane(videoUrl) {
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
+
+    water.material.uniforms['time'].value += 1.0 / 60.0; // Animates the water
 
     renderer.render(scene, camera);
 }
