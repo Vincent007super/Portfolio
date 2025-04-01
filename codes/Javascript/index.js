@@ -19,20 +19,26 @@ let planesContent = [
         image2: "../../media/img/Italy.jpg",
         extraInfo: "Click here to learn more about me"
     },
-    // {
-    //     plane: 3,
-    //     layout: "title", // Nieuwe lay-out met meerdere afbeeldingen
-    //     title: "A Collection of Images",
-    //     description: "Here are some images for you.",
-    // },
-    // {
-    //     plane: 4,
-    //     layout: "detailed", // Layout type
-    //     title: "Dit zijn een aantal projecten waaran ik heb gewerkt",
-    //     description: "meer ga je niet krijgen :D.",
-    //     image: "../../media/img/FDR.jpg",
-    //     extraInfo: "Klik hier om meer te zien"
-    // }
+    {
+        plane: 3,
+        layout: "title", // Nieuwe lay-out met meerdere afbeeldingen
+        title: "A Collection of Images",
+        description: "Here are some images for you.",
+    },
+    {
+        plane: 4,
+        layout: "detailed", // Layout type
+        title: "Dit zijn een aantal projecten waaran ik heb gewerkt",
+        description: "meer ga je niet krijgen :D.",
+        image: "../../media/img/FDR.jpg",
+        extraInfo: "Klik hier om meer te zien"
+    }
+];
+const planeLocations = [
+    { x: 0, y: 0, z: 0 }, // Plane 1
+    { x: -0, y: -45, z: -30 }, // Plane 2
+    { x: 0, y: -70, z: 5 }, // Plane 3
+    { x: 0, y: -120, z: -60 } // Plane 4
 ];
 
 // Scroll variables
@@ -95,33 +101,42 @@ function init() {
     scene = new THREE.Scene({});
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     camera.position.y = 0;
+    camera.rotatex = 50;
 
-    const overlayTexture = new THREE.TextureLoader().load('media/img/overlay.png');
-    const overlay = new THREE.Mesh(
-        new THREE.PlaneGeometry(60, 65),
-        new THREE.MeshBasicMaterial({ map: overlayTexture, transparent: true })
-    );
-    const bgTexture = new THREE.TextureLoader().load('media/img/background.png');
-    const backgroundPlane = new THREE.Mesh(
-        new THREE.PlaneGeometry(80, 100), // Large enough to cover the scene
-        new THREE.MeshBasicMaterial({ map: bgTexture, transparent: true })
-    );
-    backgroundPlane.position.set(0, -20, -1); // Place it behind everything
-    scene.add(backgroundPlane);
-    overlay.position.set(0, -30, 2.5);
-    scene.add(overlay);
+    // const overlayTexture = new THREE.TextureLoader().load('media/img/overlay.png');
+    // const overlay = new THREE.Mesh(
+    //     new THREE.PlaneGeometry(60, 65),
+    //     new THREE.MeshBasicMaterial({ map: overlayTexture, transparent: true })
+    // );
+    // const bgTexture = new THREE.TextureLoader().load('media/img/background.png');
+    // const backgroundPlane = new THREE.Mesh(
+    //     new THREE.PlaneGeometry(80, 100), // Large enough to cover the scene
+    //     new THREE.MeshBasicMaterial({ map: bgTexture, transparent: true })
+    // );
+    // backgroundPlane.position.set(0, -20, -1); // Place it behind everything
+    // scene.add(backgroundPlane);
+    // overlay.position.set(0, -30, 2.5);
+    // scene.add(overlay);
 
     camPosCalc();
     // Add planes with content from planesContent array
     planesContent.forEach((content, index) => {
         const plane = createTextPlane(content); // Pass content for each plane
-        plane.position.y = index * -12.5; // Stagger planes vertically
+        try {
+            plane.position.set(planeLocations[index].x, planeLocations[index].y, planeLocations[index].z);
+            console.log(plane + " added to scene " + planeLocations[index].x, planeLocations[index].y, planeLocations[index].z);
+        } catch (error) {
+            console.error("Error: " + error);
+            // plane.position = planeLocations[index].x, planeLocations[index].y, planeLocations[index].z; // Stagger planes vertically
+
+        };
         scene.add(plane);
         objects.push(plane);
+        console.log(plane, "added to scene at", planeLocations[index]);
     });
 
     window.addEventListener('resize', onWindowResize);
@@ -137,14 +152,15 @@ function createTextPlane(content) {
     const context = canvas.getContext('2d');
 
     const texture = new THREE.CanvasTexture(canvas);
-    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, color: 0xffffff, opacity: 0.5 });
+    texture.needsUpdate = true;
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, color: 0xffffff, opacity: 0.8 });
     const geometry = new THREE.PlaneGeometry(16, 9, 10, 10);
     const textPlane = new THREE.Mesh(geometry, material);
 
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    context.fillStyle = 'transparent';
+    context.fillStyle = 'rgba(192, 220, 224, 0.85)';
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     // Tekst wrap functie
@@ -172,12 +188,11 @@ function createTextPlane(content) {
         context.textAlign = 'center';
         context.textBaseline = 'top';
         context.fillText(content.title, canvas.width / 2, 185);
-
         context.font = '32px Arial';
         wrapText(context, content.description, canvas.width / 2, canvas.height / 2, 1200, 40);
     } else if (content.layout === "detailed") {
         if (content.image1) {
-            const imagePlane1 = createContrastImagePlane(content.image1, 5, 4.2, 1.5); 
+            const imagePlane1 = createContrastImagePlane(content.image1, 5, 4.2, 1.5);
             imagePlane1.position.set(-3.5, -2.5, 0.1); // Pas de positie aan
             textPlane.add(imagePlane1);
         }
@@ -191,7 +206,6 @@ function createTextPlane(content) {
         context.textAlign = 'center';
         context.textBaseline = 'top';
         context.fillText(content.title, canvas.width / 2, 50);
-
         context.font = '28px Arial';
         wrapText(context, content.description, canvas.width / 2, 150, canvas.width - 1000, 35);
     } else if (content.layout === "multipleImages") {
@@ -200,10 +214,8 @@ function createTextPlane(content) {
         context.textAlign = 'left';
         context.textBaseline = 'top';
         context.fillText(content.title, 75, 85);
-
         context.font = '32px Arial';
         wrapText(context, content.description, 75, 180, 1000, 40);
-
         // Voeg meerdere afbeeldingen toe
         content.images.forEach((image, index) => {
             const imagePlane = createContrastImagePlane(image, 4, 3); // Afbeelding groot maken
@@ -216,22 +228,20 @@ function createTextPlane(content) {
         context.textAlign = 'left';
         context.textBaseline = 'top';
         context.fillText(content.title, 75, 85);
-
         context.font = '32px Arial';
         wrapText(context, content.description, 75, 180, 1000, 40);
-
         // Voeg een video toe
         const videoPlane = createVideoPlane(content.videoUrl);
         videoPlane.position.set(4, -0.2, 0.1);
         textPlane.add(videoPlane); // Voeg video toe als kind van de tekstplane
     }
-
     // Plaats afbeelding als apart object
     if (content.layout === "detailed" && content.image) {
         const imagePlane = createContrastImagePlane(content.image, 4, 4.5); // Afbeeldingsgrootte aanpassen
         imagePlane.position.set(3.5, 0, 0.1); // Positie ten opzichte van de tekst
         textPlane.add(imagePlane); // Voeg afbeelding toe als kind van de tekstplane
     }
+
     return textPlane;
 }
 
@@ -241,7 +251,7 @@ function createTextPlane(content) {
 function onScroll(scroll) {
     if (canScroll) {
         canScroll = false;
-        newScroll = scroll.deltaY;
+        newScroll = event.deltaY;
 
         if (newScroll > 0 && currCam < objects.length) {
             currCam++;
@@ -252,14 +262,41 @@ function onScroll(scroll) {
             return;
         }
 
-        const targetY = -12.5 * (currCam - 1); // Target y-position
-        gsap.timeline()
-            .to(camera.position, { z: camPosZ + 10, duration: 0.5 }) // Move camera back
-            .to(camera.position, { y: targetY, duration: 0.5 }) // Slide camera down
-            .to(camera.position, { z: camPosZ, duration: 0.5 }) // Move camera forward
-            .call(() => { canScroll = true; }); // Re-enable scrolling after animation
+        // Bereken het nieuwe doel op basis van de huidige positie
+        let targetY = planeLocations[currCam - 1].y;
+        let targetZ = planeLocations[currCam - 1].z + 10;
 
-        console.log('Camera moved to plane ' + currCam, 'new y: ' + targetY);
+        let tl = gsap.timeline({
+            onComplete: () => {
+                canScroll = true;
+            }
+        });
+
+        tl.to(camera.rotation, {
+            x: 0.2,
+            ease: "power3.inOut",
+            duration: 1.5
+        })
+        .to(camera.position, {
+            z: targetZ + 3.5,
+            ease: "power3.inOut",
+            duration: 2
+        }, "-=1") // Zorg voor overlap tussen bewegingen
+        .to(camera.rotation, {
+            x: -1,
+            ease: "power3.inOut",
+            duration: 1.5
+        }, "-=1")
+        .to(camera.position, {
+            y: targetY,
+            ease: "power3.inOut",
+            duration: 2
+        }, "-=1.2")
+        .to(camera.rotation, {
+            x: 0,
+            ease: "power3.inOut",
+            duration: 1.5
+        }, "-=1");
     }
 }
 // Image on plane
