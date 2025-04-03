@@ -1,0 +1,9 @@
+h3 {
+    color: #4a3d31;
+    text-decoration: underline;
+}
+
+ul {
+    list-style-type: square;
+    padding-left: 20px;
+}

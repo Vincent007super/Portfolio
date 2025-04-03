@@ -11,7 +11,7 @@ let planesContent = [
         title: "Hello world",
         description: "Welcome to my portfolio. Interested? Scroll down to dive in!",
         image: "example1.png"
-    },
+        },
     {
         plane: 2,
         layout: "detailed", // Layout type
@@ -19,13 +19,14 @@ let planesContent = [
         description: "A true history fanatic, Vincent loves to travel across countries to visit places where once was fought and explore the machinery with which they engaged in combat. But of course, one must not merely see history if not learn from it. Vincent tries to stuff as much information as possible out of those short trips to take back home. And once home he is always ready for the next trip.",
         image1: "../../media/img/London.jpg",
         image2: "../../media/img/Italy.jpg",
-        extraInfo: "Click here to learn more about me"
+        extraInfo: "Click here to learn more about me",
+        link: "about_me.html"
     },
     {
         plane: 3,
         layout: "title", // Nieuwe lay-out met meerdere afbeeldingen
         title: "A Collection of Images",
-        description: "Here are some images for you.",
+        description: "Here are some images for you."
     },
     {
         plane: 4,
@@ -33,12 +34,13 @@ let planesContent = [
         title: "Dit zijn een aantal projecten waaran ik heb gewerkt",
         description: "meer ga je niet krijgen :D.",
         image: "../../media/img/FDR.jpg",
-        extraInfo: "Klik hier om meer te zien"
+        extraInfo: "Klik hier om meer te zien",
+        link: "page4.html"
     }
 ];
 const planeLocations = [
     { x: 0, y: 0, z: 0 }, // Plane 1
-    { x: -0, y: -45, z: -30 }, // Plane 2
+    { x: 0, y: -30, z: 8 }, // Plane 2
     { x: 0, y: -70, z: 5 }, // Plane 3
     { x: 0, y: -120, z: -60 } // Plane 4
 ];
@@ -110,6 +112,39 @@ function init() {
     camera.position.y = 0;
     camera.rotatex = 50;
 
+    // Create Raycaster and mouse vector
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    function onMouseClick(event) {
+        event.preventDefault();
+
+        // Convert mouse position to normalized device coordinates (-1 to +1)
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+        // Update the raycaster with the camera position and mouse direction
+        raycaster.setFromCamera(mouse, camera);
+
+        // Check if any planes were clicked
+        const intersects = raycaster.intersectObjects(objects);
+
+        if (intersects.length > 0) {
+            // Find the first intersected object
+            const clickedPlane = intersects[0].object;
+
+            // Find the plane's associated content
+            console.log(planesContent);
+            const clickedIndex = objects.indexOf(clickedPlane); // Get index of clicked plane
+            const clickedContent = planesContent[clickedIndex]; // Retrieve corresponding content
+            
+
+            if (clickedContent && clickedContent.link !== undefined) {
+                window.location.href = clickedContent.link; // Redirect to the linked page
+            }
+        }
+    }
+
     camPosCalc();
     // Add planes with content from planesContent array
     planesContent.forEach((content, index) => {
@@ -138,6 +173,9 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 
     window.addEventListener('wheel', onScroll);
+
+    window.addEventListener('mousedown', onMouseClick, false);
+
 
     console.log('Scene initialized');
 }

@@ -1,0 +1,19 @@
+input, textarea {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0;
+    border: 1px solid #c0aa83;
+    background: #f4f1e0;
+}
+
+button {
+    background: #4a3d31;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #3b3026;
+}
