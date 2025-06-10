@@ -4,9 +4,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 // Scene setup
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#0b58d1');
+scene.fog = new THREE.Fog('#0b58d1', 10, 50); // Fog starts at 10 units, ends at 50
+
 
 // add THE SUN
-const sun = new THREE.SpotLight(0xfff0dd, 15, 100, Math.PI / 1.5, 1, 1);
+const sun = new THREE.SpotLight(0xfff0dd, 150, 100, Math.PI / 1.5, 1, 1);
 sun.position.set(15, 30, 10);
 sun.castShadow = true;
 sun.shadow.mapSize.width = 2048;
@@ -20,6 +22,23 @@ scene.add(sunTarget);
 sun.target = sunTarget;
 
 scene.add(sun);
+
+// add GOD RAYS
+const rayGeometry = new THREE.ConeGeometry(5, 20, 32, 1, true);
+const rayMaterial = new THREE.MeshBasicMaterial({
+  color: 0xfff0dd,
+  transparent: true,
+  opacity: 1,
+  side: THREE.BackSide,
+  depthWrite: true,
+});
+
+const godRay = new THREE.Mesh(rayGeometry, rayMaterial);
+godRay.position.copy(sun.position);
+godRay.rotation.x = -Math.PI / 2;
+scene.add(godRay);
+
+scene.fog = new THREE.Fog(0xfff0dd, 5, 300); // Reapply fog to match background
 
 // illuminate the scene with ambient light
 const light = new THREE.AmbientLight( 0x404040, 0.45 ); // soft white light
@@ -142,12 +161,57 @@ loader.load(
     scene.add(model);
   },
   (xhr) => {
-    console.log(`Loading: ${(xhr.loaded / xhr.total) * 100}%`);
   },
   (error) => {
     console.error('Error loading GLTF model:', error);
   }
 );
+
+const terrainSize = 450;
+const segments = 450;
+const groundGeometry = new THREE.PlaneGeometry(terrainSize, terrainSize, segments, segments);
+groundGeometry.rotateX(-Math.PI / 2);
+
+// Load texture FIRST
+const textureLoader = new THREE.TextureLoader();
+const groundTexture = textureLoader.load('media/img/rockT.avif');
+groundTexture.wrapS = groundTexture.wrapT = THREE.RepeatWrapping;
+groundTexture.repeat.set(32, 32);
+
+// THEN create material
+const groundMaterial = new THREE.MeshStandardMaterial({
+  map: groundTexture,
+  roughness: 1,
+  metalness: 0,
+  side: THREE.DoubleSide,
+});
+
+// NOW create the mesh using the above material
+const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+ground.position.y = -0.01;
+ground.receiveShadow = true;
+
+// Mountain elevation logic
+const posAttr = groundGeometry.attributes.position;
+for (let i = 0; i < posAttr.count; i++) {
+  const x = posAttr.getX(i);
+  const z = posAttr.getZ(i);
+  const dist = Math.sqrt(x * x + z * z);
+
+  if (dist > 100) {
+    const noise =
+      (Math.sin(x * 0.3) * Math.cos(z * 0.3) +
+      Math.sin(z * 0.5) * 0.5 +
+      Math.random() * 0.3) * 4;
+  
+    const height = Math.pow((dist - 60) * 0.08, 1.4) + noise;
+    posAttr.setY(i, height);
+  }
+}
+
+groundGeometry.computeVertexNormals(); // important after manipulating vertices
+posAttr.needsUpdate = true;
+scene.add(ground);
 
 // Animation loop
 function animate() {
