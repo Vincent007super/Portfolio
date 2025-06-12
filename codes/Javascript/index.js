@@ -146,8 +146,22 @@ window.addEventListener('resize', () => {
   renderer.setSize(innerWidth, innerHeight);
 });
 
-// GLTF Loader
+// GLTF Loaders
 const loader = new GLTFLoader();
+
+loader.load('media/models/jagdtiger.glb', (gltf) => {
+  const jagdtiger = gltf.scene;
+  jagdtiger.position.set(-1.2, 0.02, 2); // Left of camera
+  jagdtiger.rotation.y = Math.PI; // Face toward -Z (assumed camera dir)
+  jagdtiger.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+  scene.add(jagdtiger);
+});
+
 loader.load(
   'media/models/street.glb',
   (gltf) => {
@@ -166,6 +180,35 @@ loader.load(
     console.error('Error loading GLTF model:', error);
   }
 );
+
+loader.load('media/models/KV.glb', (gltf) => {
+  const KV = gltf.scene;
+  KV.scale.set(0.05, 0.05, 0.05); // Shrink a lot
+  KV.position.set(1.5, 0.4, -25); // In front, center road
+  KV.rotation.y = 0.4; // Face camera
+  KV.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+  scene.add(KV);
+});
+
+// SHERMAN FIREFLY (slightly smaller)
+loader.load('media/models/sherman.glb', (gltf) => {
+  const sherman = gltf.scene;
+  sherman.scale.set(0.4, 0.4, 0.4); // Make it smaller
+  sherman.position.set(-1.6, 0.75, -40); // Behind KV
+  sherman.rotation.y = 0; // Same facing as KV
+  sherman.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+  scene.add(sherman);
+});
 
 const terrainSize = 450;
 const segments = 450;
