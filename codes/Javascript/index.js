@@ -47,24 +47,40 @@ scene.add( light );
 // Define camera positions and lookAt targets
 const cameraPath = [
   {
-    position: new THREE.Vector3(0, 2, 5),
-    lookAt: new THREE.Vector3(0, 1, 0),
+    // Fired from the jagdtiger
+    position: new THREE.Vector3(-1.2, 0.02, 2),
+    lookAt: new THREE.Vector3(1.5, 0.4, -25),
+    bankZ: 0.1
   },
   {
-    position: new THREE.Vector3(5, 2.5, 4),
-    lookAt: new THREE.Vector3(0, 1.5, -2),
+    // Swoop past the KV from the right
+    position: new THREE.Vector3(3, 2, -15),
+    lookAt: new THREE.Vector3(1.5, 1, -25),
+    bankZ: -0.1
   },
   {
-    position: new THREE.Vector3(10, 3, 0),
-    lookAt: new THREE.Vector3(5, 1, -5),
+    // Drive-by the Sherman on the left
+    position: new THREE.Vector3(-3, 2.2, -35),
+    lookAt: new THREE.Vector3(-1.6, 1.5, -40),
+    bankZ: 0.1
   },
   {
-    position: new THREE.Vector3(7, 2, -5),
-    lookAt: new THREE.Vector3(3, 1.2, -10),
+    // Ponder the Jagdtiger
+    position: new THREE.Vector3(0, 0.15, -4.6),
+    lookAt: new THREE.Vector3(-1.2, 1.3, 0),
+    bankZ: 0
   },
   {
-    position: new THREE.Vector3(3, 1.8, -8),
-    lookAt: new THREE.Vector3(0, 1, -15),
+    // Peek from inside right building
+    position: new THREE.Vector3(3.9, 2.8, -15),
+    lookAt: new THREE.Vector3(1.2, 0.2, -28),
+    bankZ: 0.3
+  },
+  {
+    // Sherman commander view
+    position: new THREE.Vector3(-1.7, 1.78, -40.2),
+    lookAt: new THREE.Vector3(0, 0, 30),
+    bankZ: 0.03
   },
 ];
 
@@ -80,18 +96,20 @@ function animateCameraTo(index) {
   if (index < 0 || index >= cameraPath.length || isAnimating) return;
 
   const next = cameraPath[index];
-  const duration = 2.5; // seconds
+  const duration = 2.8; // cinematic drift duration
 
   isAnimating = true;
 
+  // Animate position
   gsap.to(camera.position, {
     x: next.position.x,
     y: next.position.y,
     z: next.position.z,
-    ease: "power2.inOut",
+    ease: "power3.inOut",
     duration,
   });
 
+  // Animate lookAt using an Object3D as a target
   gsap.to(lookAtTarget, {
     x: next.lookAt.x,
     y: next.lookAt.y,
@@ -100,7 +118,20 @@ function animateCameraTo(index) {
     duration,
     onUpdate: () => {
       camera.lookAt(lookAtTarget);
-    },
+    }
+  });
+
+  // Animate camera "banking" using quaternions
+  const tempCam = new THREE.PerspectiveCamera();
+  tempCam.position.copy(next.position);
+  tempCam.lookAt(next.lookAt);
+
+  gsap.to(camera.rotation, {
+    x: tempCam.rotation.x + (next.bankX || 0),
+    y: tempCam.rotation.y + (next.bankY || 0),
+    z: tempCam.rotation.z + (next.bankZ || 0),
+    duration,
+    ease: "sine.inOut",
     onComplete: () => {
       currentStep = index;
       isAnimating = false;
@@ -123,11 +154,11 @@ window.addEventListener("wheel", (event) => {
 const camera = new THREE.PerspectiveCamera(
   60,
   window.innerWidth / window.innerHeight,
-  0.1,
-  1000
+  0.001,
+  2000
 );
-camera.position.set(0, 2, 5);
-camera.lookAt(new THREE.Vector3(0, 1, 0));
+camera.position.set(-0.989, 1.055, -0.6);
+camera.lookAt(new THREE.Vector3(1.5, 0.4, -25));
 
 
 // Renderer
