@@ -48,13 +48,13 @@ scene.add( light );
 const cameraPath = [
   {
     // Fired from the jagdtiger
-    position: new THREE.Vector3(-1.2, 0.02, 2),
+    position: new THREE.Vector3(-0.989, 1.055, -0.6),
     lookAt: new THREE.Vector3(1.5, 0.4, -25),
     bankZ: 0.1
   },
   {
     // Swoop past the KV from the right
-    position: new THREE.Vector3(3, 2, -15),
+    position: new THREE.Vector3(1.5, 0.4, -20),
     lookAt: new THREE.Vector3(1.5, 1, -25),
     bankZ: -0.1
   },
